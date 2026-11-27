@@ -1,4 +1,4 @@
-# kafka.blog
+# kafka.blog (Kafkaintherun)
 
 The Kafkaintherun blog as a static Astro site served by a Cloudflare Worker (static assets + a small Worker).
 

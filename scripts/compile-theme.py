@@ -208,6 +208,15 @@ def main(src, dst):
     page = page.replace(a, "[].forEach.call(L.querySelectorAll('h2.kafka-list-shelf,.kafka-item'),function(el){", 1)
     page = page.replace(b, b + "var ti=art.querySelector('img');if(ti&&window.kTiny&&!el.style.getPropertyValue('--kbg'))el.style.setProperty('--kbg','url(\"'+kTiny(ti.src).replace(/\"/g,'%22')+'\")');", 1)
     page = page.replace("if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();})();\n//</script>\n<script is:inline>//\n/* ===== v171", "go();document.addEventListener('DOMContentLoaded',go);window.addEventListener('load',go);})();\n//</script>\n<script is:inline>//\n/* ===== v171", 1)
+    # Small, subtle shelf covers (owner, 2026-11-27): narrower cover column, softer shadow, text tiles shrink to the title only
+    nn = ''.join(':not(#kc%d)' % i for i in range(1, 15))
+    S = 'html body .kafka-list[data-list]' + nn + ' .kshelf-strip>.kafka-item'
+    css = (S + '{grid-template-columns:56px minmax(0,1fr)!important;column-gap:12px!important}'
+           + S + '>.kt-art{width:56px!important;opacity:.88!important;border-radius:3px!important;box-shadow:0 1px 3px rgba(60,40,20,.22)!important}'
+           + S + '>.kt-art img{border-radius:3px!important}'
+           + S + '>.kt-art .kt-k,' + S + '>.kt-art .kt-b{display:none!important}'
+           + S + '>.kt-art .kt-t{font-size:7.5px!important;line-height:1.15!important;word-break:normal!important;overflow-wrap:normal!important;hyphens:none!important}')
+    page = page.replace('</head>', '<style>' + css + '</style></head>', 1)
     # Favicon: the priest king (public/favicon.ico, favicon-32.png, apple-touch-icon.png)
     page = re.sub(r'<link href="https://lh3\.googleusercontent\.com/d/13BZNy4hE52ijgDktiC3RfZ3fC62pxgye=w64" rel="icon">', '<link href="/favicon.ico" rel="icon" sizes="any"><link href="/favicon-32.png" rel="icon" type="image/png" sizes="32x32"><link href="/apple-touch-icon.png" rel="apple-touch-icon">', page)
     open(dst, 'w').write(page)

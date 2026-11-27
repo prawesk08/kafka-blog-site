@@ -20,7 +20,7 @@ const compose = (fm, html) => {
   if (fm.synopsis) pre += `<p class="kafka-excerpt" style="display:none">${esc(fm.synopsis)}</p>\n`;
   if (fm.dropcap) html = html.replace(/<p>/, '<p class="kdrop">');
   const out = pre + html;
-  return /class="k(fig|pull|hl|drop)/.test(out) && BLOCKS_CSS ? `<style>${BLOCKS_CSS}</style>\n` + out : out;
+  return /class="k(fig|pull|hl|drop|video)|ql-indent/.test(out) && BLOCKS_CSS ? `<style>${BLOCKS_CSS}</style>\n` + out : out;
 };
 const uniq = (a) => [...new Set(a.filter(Boolean).map(String))];
 

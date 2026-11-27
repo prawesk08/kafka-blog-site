@@ -10,3 +10,7 @@
 .khl{margin:1.6em 0;padding:14px 20px;border-radius:4px;background:#f6edd6;border-left:4px solid #c9a24a;font-size:.96em}
 .khl-rose{background:#f6e3e1;border-left-color:#c97a7a}.khl-sage{background:#e6eddc;border-left-color:#8fa573}
 .kdrop:first-letter{float:left;font:700 3.6em/.82 Fraunces,Georgia,serif;padding:.06em .1em 0 0;color:#2a251f}
+.kvideo{position:relative;aspect-ratio:16/9;margin:1.6em 0;background:#000}
+.kvideo iframe,.kvideo video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ql-indent-1{padding-left:3em}.ql-indent-2{padding-left:6em}.ql-indent-3{padding-left:9em}.ql-indent-4{padding-left:12em}
+.kpull{text-align:center}

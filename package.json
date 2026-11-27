@@ -6,7 +6,7 @@
     "theme": "python3 scripts/compile-theme.py theme/blogger-theme.xml src/layouts/Theme.astro src/data/theme-fragments.json",
     "import": "node scripts/import-blogger.mjs",
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/postbuild.mjs",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -14,6 +14,7 @@
     "astro": "5.18.2"
   },
   "devDependencies": {
-    "linkedom": "^0.18.9"
+    "linkedom": "^0.18.9",
+    "wrangler": "^4.168.0"
   }
 }

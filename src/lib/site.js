@@ -1,7 +1,7 @@
 // Site data and the Blogger-shaped `D` object the compiled theme expects.
-import postsRaw from '../data/posts.json';
-import pagesRaw from '../data/pages.json';
-import popular from '../data/popular.json';
+import postsRaw from '../data/posts.json' with { type: 'json' };
+import pagesRaw from '../data/pages.json' with { type: 'json' };
+import popular from '../data/popular.json' with { type: 'json' };
 
 export const SITE = 'https://www.kafka.blog';
 export const HOME = SITE + '/';
@@ -112,7 +112,7 @@ export function makeD({ kind, item = null, list = [], label = null, query = null
     isArchive: kind === 'archive',
     isError: error,
     isPreview: false,
-    title: item ? item.title : (title || BLOG.title),
+    title: item ? item.title : BLOG.title,
     description: item ? (item.description || item.snippets.short) : BLOG.metaDescription,
     featuredImage: item ? item.featuredImage : '',
     url: Object.assign(new String(canonical), { canonical }),

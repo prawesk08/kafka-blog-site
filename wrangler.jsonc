@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "kafka-blog-site",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-11-13",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // keep every Blogger URL exactly as it is: /2025/05/manusi.html is served as-is, never redirected
+    "html_handling": "none",
+    "not_found_handling": "none"
+  },
+  "observability": { "enabled": true }
+}

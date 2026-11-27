@@ -219,7 +219,7 @@ def main(src, dst):
            + S + '>.kt-art:not(:has(img)){display:none!important}')
     page = page.replace('</head>', '<style is:inline>' + css + '</style></head>', 1)
     # Favicon: the priest king (public/favicon.ico, favicon-32.png, apple-touch-icon.png)
-    page = re.sub(r'<link href="https://lh3\.googleusercontent\.com/d/13BZNy4hE52ijgDktiC3RfZ3fC62pxgye=w64" rel="icon">', '<link href="/favicon.ico" rel="icon" sizes="any"><link href="/favicon-32.png" rel="icon" type="image/png" sizes="32x32"><link href="/apple-touch-icon.png" rel="apple-touch-icon">', page)
+    page = re.sub(r'<link href="https://img\.kafka\.blog/googleusercontent\.com/d/13BZNy4hE52ijgDktiC3RfZ3fC62pxgye=w64" rel="icon">', '<link href="/favicon.ico" rel="icon" sizes="any"><link href="/favicon-32.png" rel="icon" type="image/png" sizes="32x32"><link href="/apple-touch-icon.png" rel="apple-touch-icon">', page)
     open(dst, 'w').write(page)
     print('wrote', dst, len(page))
 

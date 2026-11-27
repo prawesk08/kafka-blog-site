@@ -20,9 +20,9 @@ const isoMs = (iso) => {
 const thumb = (u) => {
   if (!u) return null;
   let m;
-  if ((m = u.match(/^(https:\/\/lh\d\.googleusercontent\.com\/d\/[^=?#]+)(?:=([^?#]*))?/))) return m[1] + '=s72' + (m[2] ? '-' + m[2] : '') + '-c';
-  if ((m = u.match(/^(https:\/\/blogger\.googleusercontent\.com\/img\/.+?)\/(s\d+|w\d+-h\d+[^/]*|[^/]*-rw)\/([^/]+)$/))) return `${m[1]}/s72-${/^s\d+$/.test(m[2]) ? 'c' : m[2] + '-c'}/${m[3]}`;
-  if ((m = u.match(/^(https:\/\/blogger\.googleusercontent\.com\/img\/[^=]+?)(=[^/]*)?$/))) return m[1] + '=s72-c';
+  if ((m = u.match(/^(https:\/\/(?:lh\d\.googleusercontent\.com|img\.kafka\.blog\/googleusercontent\.com)\/d\/[^=?#]+)(?:=([^?#]*))?/))) return m[1] + '=s72' + (m[2] ? '-' + m[2] : '') + '-c';
+  if ((m = u.match(/^(https:\/\/(?:blogger\.googleusercontent\.com|img\.kafka\.blog\/blogger\.googleusercontent\.com)\/img\/.+?)\/(s\d+|w\d+-h\d+[^/]*|[^/]*-rw)\/([^/]+)$/))) return `${m[1]}/s72-${/^s\d+$/.test(m[2]) ? 'c' : m[2] + '-c'}/${m[3]}`;
+  if ((m = u.match(/^(https:\/\/(?:blogger\.googleusercontent\.com|img\.kafka\.blog\/blogger\.googleusercontent\.com)\/img\/[^=]+?)(=[^/]*)?$/))) return m[1] + '=s72-c';
   return null;
 };
 const summary = (html) => plainText(html.replace(/<\/p>/gi, '')).replace(/\s+/g, ' ').trim().slice(0, 400);

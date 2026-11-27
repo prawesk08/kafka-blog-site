@@ -40,10 +40,14 @@ export async function buildMediaData({ posts, out, site }) {
   const stats = { films: 0, noThumb: 0, noPost: 0, audio: 0 };
   const sitemap = [];
 
-  if (films && typeof films === 'object') {
+  {
     const cmap = (caps && caps.videos) || {};
-    for (const [p, e] of Object.entries(films)) {
-      if (!e || !e.v16) continue;
+    const films0 = films && typeof films === 'object' ? films : {};
+    // Films come from two places: the R2 list, and the older captions entries that carry their own src (e.g. Manusi).
+    const all = { ...films0 };
+    for (const [p, c] of Object.entries(cmap)) if (!all[p] && c && c.src) all[p] = { slug: c.slug, l: c.lang, v16: '' };
+    for (const [p, e] of Object.entries(all)) {
+      if (!e || (!e.v16 && !(cmap[p] && cmap[p].src))) continue;
       const post = byPath[p];
       if (!post) { stats.noPost++; console.warn('media-data: film has no post on the site: ' + p); continue; }
       const [f, html] = read(p);

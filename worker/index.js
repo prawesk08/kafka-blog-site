@@ -6,6 +6,8 @@
 //   /search?q=... , /search?updated-max=...  -> rendered list
 //   /feeds/...                -> Blogger-compatible feeds (JSON, Atom, RSS), used by the theme scripts and readers
 //   old WordPress paths       -> 301 to the matching post (kafka-oldpaths.js still handles the rest in the page)
+import { lookup } from './redirects.js';
+
 const SITE = 'https://www.kafka.blog';
 
 export default {
@@ -54,6 +56,9 @@ export default {
       }
       return list(env, url, { shell: '/_list.html', filter: () => true, per: +(q.get('max-results') || 10), q, base: `${SITE}/search` });
     }
+    // old WordPress / Blogger addresses that changed (table in redirects.js, copied from Blogger's 310 redirects)
+    const moved = lookup(path);
+    if (moved) return Response.redirect(SITE + moved, 301);
     // Blogger mobile/legacy variants of a real page, e.g. /p/books.html/ or /2025/05/manusi.html/
     if (path.endsWith('.html/')) return Response.redirect(SITE + path.slice(0, -1), 301);
     // old WordPress permalinks (/2023/02/15/slug/) -> the Blogger post with that slug, when we know it

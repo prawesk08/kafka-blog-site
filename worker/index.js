@@ -9,7 +9,7 @@
 const SITE = 'https://www.kafka.blog';
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     // after the move: kafka.blog -> www.kafka.blog, like Blogger did
     if (url.hostname === 'kafka.blog') { url.hostname = 'www.kafka.blog'; return Response.redirect(url.toString(), 301); }
@@ -22,6 +22,8 @@ export default {
     if (path === '/admin' ) return Response.redirect(url.origin + '/admin/', 301);
     if (path === '/admin/') return asset('/admin/index.html');
     if (path === '/api/auth') return oauthStart(env, url);
+    if (path === '/api/hit') return hit(env, ctx, request);
+    if (path === '/api/stats') return stats(env, request, url);
     if (path === '/api/callback') return oauthCallback(env, url, request);
     if (path.startsWith('/feeds/')) return feeds(env, url, path, q);
     if ((m0 = path.match(/^\/__proxy\/(assets|audio)\/(.*)$/))) {
@@ -250,4 +252,56 @@ async function oauthCallback(env, url, request) {
 })();
 </script>`;
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Set-Cookie': 'k_oauth=; Path=/api; Max-Age=0' } });
+}
+
+// ---------------- visitor counts (Stats tab in /admin/) ----------------
+// A tiny script in every page sends one POST per real page view (bots rarely run it). We keep only a day,
+// a path and a count; no cookies, no IP addresses, nothing personal.
+const BOT = /bot|crawl|spider|slurp|preview|facebookexternalhit|headless|lighthouse|pagespeed|curl|python|wget/i;
+async function hit(env, ctx, request) {
+  const cors = { 'Access-Control-Allow-Origin': SITE };
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { ...cors, 'Access-Control-Allow-Methods': 'POST', 'Access-Control-Allow-Headers': 'Content-Type' } });
+  if (request.method !== 'POST' || !env.DB || BOT.test(request.headers.get('User-Agent') || '')) return new Response(null, { status: 204, headers: cors });
+  let b = {};
+  try { b = JSON.parse(await request.text()); } catch { return new Response(null, { status: 204, headers: cors }); }
+  let path = String(b.p || '/').split(/[?#]/)[0].slice(0, 200);
+  if (!path.startsWith('/') || path.startsWith('/admin') || path.startsWith('/api')) return new Response(null, { status: 204, headers: cors });
+  const day = new Date().toISOString().slice(0, 10);
+  let host = '';
+  try { host = new URL(String(b.r || '')).hostname.replace(/^www\./, ''); } catch {}
+  if (host === 'kafka.blog') host = '';
+  const up = 'INSERT INTO %T (day, %C, n) VALUES (?1, ?2, 1) ON CONFLICT(day, %C) DO UPDATE SET n = n + 1';
+  const st = [env.DB.prepare(up.replace('%T', 'views').replace(/%C/g, 'path')).bind(day, path)];
+  st.push(env.DB.prepare(up.replace('%T', 'refs').replace(/%C/g, 'host')).bind(day, host || '(direct)'));
+  ctx.waitUntil(env.DB.batch(st).catch(() => {}));
+  return new Response(null, { status: 204, headers: cors });
+}
+
+// Only someone who can write to the repo (the editor's GitHub sign-in) may read the numbers.
+const OK = new Map();
+async function allowed(request) {
+  const tok = (request.headers.get('Authorization') || '').replace(/^token\s+/i, '');
+  if (!tok) return false;
+  const hit = OK.get(tok);
+  if (hit && hit > Date.now()) return true;
+  const r = await fetch('https://api.github.com/repos/prawesk08/kafka-blog-site', { headers: { Authorization: 'token ' + tok, 'User-Agent': 'kafka-blog-stats', Accept: 'application/vnd.github+json' } });
+  if (!r.ok) return false;
+  const j = await r.json();
+  if (!j.permissions || !(j.permissions.push || j.permissions.admin)) return false;
+  OK.set(tok, Date.now() + 600000);
+  return true;
+}
+async function stats(env, request, url) {
+  const h = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
+  if (!(await allowed(request))) return new Response('{"error":"not allowed"}', { status: 401, headers: h });
+  if (!env.DB) return new Response('{"error":"no database"}', { status: 500, headers: h });
+  const days = Math.min(Math.max(+url.searchParams.get('days') || 30, 1), 365);
+  const from = new Date(Date.now() - (days - 1) * 86400000).toISOString().slice(0, 10);
+  const [daily, top, refs, first] = await env.DB.batch([
+    env.DB.prepare('SELECT day, SUM(n) AS n FROM views WHERE day >= ?1 GROUP BY day ORDER BY day').bind(from),
+    env.DB.prepare('SELECT path, SUM(n) AS n FROM views WHERE day >= ?1 GROUP BY path ORDER BY n DESC LIMIT 25').bind(from),
+    env.DB.prepare('SELECT host, SUM(n) AS n FROM refs WHERE day >= ?1 GROUP BY host ORDER BY n DESC LIMIT 12').bind(from),
+    env.DB.prepare('SELECT MIN(day) AS d FROM views'),
+  ]);
+  return new Response(JSON.stringify({ from, since: first.results[0] && first.results[0].d, daily: daily.results, top: top.results, refs: refs.results }), { headers: h });
 }

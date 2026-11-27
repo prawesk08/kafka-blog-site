@@ -19,6 +19,10 @@ export default {
     const asset = (p, status) => serve(env, url, p, status);
 
     if (path === '/' || path === '/index.html') return asset('/index.html');
+    if (path === '/admin' ) return Response.redirect(url.origin + '/admin/', 301);
+    if (path === '/admin/') return asset('/admin/index.html');
+    if (path === '/api/auth') return oauthStart(env, url);
+    if (path === '/api/callback') return oauthCallback(env, url, request);
     if (path.startsWith('/feeds/')) return feeds(env, url, path, q);
 
     let m;
@@ -200,4 +204,44 @@ function atomFrom(head, entries) {
   const h = JSON.parse(head);
   const es = entries.map((s) => JSON.parse(s)).map((e) => `<entry><id>${x(e.id.$t)}</id><published>${e.published.$t}</published><updated>${e.updated.$t}</updated>${(e.category || []).map((c) => `<category scheme="http://www.blogger.com/atom/ns#" term="${x(c.term)}"/>`).join('')}<title type="text">${x(e.title.$t)}</title>${e.content ? `<content type="html">${x(e.content.$t)}</content>` : `<summary type="text">${x(e.summary.$t)}</summary>`}${e.link.map((l) => `<link rel="${l.rel}" type="${l.type || ''}" href="${x(l.href)}"${l.title ? ` title="${x(l.title)}"` : ''}/>`).join('')}<author><name>बासभ</name></author>${e.media$thumbnail ? `<media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="${x(e.media$thumbnail.url)}" height="72" width="72"/>` : ''}</entry>`).join('');
   return `<?xml version='1.0' encoding='UTF-8'?><feed xmlns="http://www.w3.org/2005/Atom"><id>${x(h.id.$t)}</id><updated>${h.updated.$t}</updated><title type="text">${x(h.title.$t)}</title><link rel="alternate" type="text/html" href="${SITE}/"/>${es}</feed>`;
+}
+
+// ---------------- GitHub sign-in for the post editor (/admin/) ----------------
+// Needs a GitHub OAuth App whose callback URL is https://<site>/api/callback, with its id and secret stored
+// as the Worker secrets GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET.
+function oauthStart(env, url) {
+  if (!env.GITHUB_CLIENT_ID) return new Response('Editor sign-in is not set up yet (GITHUB_CLIENT_ID missing).', { status: 500 });
+  const state = crypto.randomUUID();
+  const gh = new URL('https://github.com/login/oauth/authorize');
+  gh.searchParams.set('client_id', env.GITHUB_CLIENT_ID);
+  gh.searchParams.set('redirect_uri', url.origin + '/api/callback');
+  gh.searchParams.set('scope', url.searchParams.get('scope') || 'public_repo');
+  gh.searchParams.set('state', state);
+  return new Response(null, { status: 302, headers: { Location: gh.toString(), 'Set-Cookie': `k_oauth=${state}; Path=/api; HttpOnly; Secure; SameSite=Lax; Max-Age=600` } });
+}
+
+async function oauthCallback(env, url, request) {
+  const code = url.searchParams.get('code'), state = url.searchParams.get('state');
+  const saved = (/(?:^|;\s*)k_oauth=([^;]+)/.exec(request.headers.get('Cookie') || '') || [])[1];
+  let msg, status = 'success';
+  try {
+    if (!code) throw new Error('missing code');
+    if (!state || state !== saved) throw new Error('sign-in expired, please try again');
+    const r = await fetch('https://github.com/login/oauth/access_token', {
+      method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'User-Agent': 'kafka-blog-site' },
+      body: JSON.stringify({ client_id: env.GITHUB_CLIENT_ID, client_secret: env.GITHUB_CLIENT_SECRET, code, redirect_uri: url.origin + '/api/callback', state }),
+    });
+    const j = await r.json();
+    if (!j.access_token) throw new Error(j.error_description || j.error || 'no token');
+    msg = { token: j.access_token, provider: 'github' };
+  } catch (e) { status = 'error'; msg = { message: String(e.message || e) }; }
+  const payload = JSON.stringify(`authorization:github:${status}:${JSON.stringify(msg)}`);
+  const html = `<!doctype html><meta charset="utf-8"><title>Signing in</title><script>
+(function(){
+  function done(e){ if(!window.opener) return; window.opener.postMessage(${payload}, e.origin); window.removeEventListener('message', done); setTimeout(function(){ window.close(); }, 300); }
+  window.addEventListener('message', done, false);
+  if (window.opener) window.opener.postMessage('authorizing:github', '*'); else document.body.textContent = 'Signed in. You can close this window.';
+})();
+</script>`;
+  return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Set-Cookie': 'k_oauth=; Path=/api; Max-Age=0' } });
 }

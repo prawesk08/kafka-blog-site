@@ -5,7 +5,8 @@ The Kafkaintherun blog as a static Astro site served by a Cloudflare Worker (sta
 - `theme/blogger-theme.xml` is the Blogger theme the site was built from. `npm run theme` compiles it into
   `src/layouts/Theme.astro` (head, header, nav, sidebar, footer, every inline script, per-post SEO blocks).
 - `src/components/Widget.astro` and `BlogPost.astro` rebuild Blogger's widgets (post lists, post page, archive, labels).
-- `src/data/posts.json`, `pages.json` hold the posts. `npm run import -- feed.atom` re-imports a Google Takeout Blogger export.
+- Posts live in `content/posts/<year>/<month>/<slug>.html|.md` (front matter + body); pages in `content/pages/`. Old comments are in `content/comments.json`.
+- The editor is at `/admin/` (Decap CMS). It signs in with GitHub via the Worker (`/api/auth`) and commits to this repo.
 - Styles and scripts still come from `assets.kafka.blog` (repo `kafka-blog-assests`), films and audio from `audio.kafka.blog`.
 - `worker/index.js` serves Blogger URLs unchanged (`/2025/05/manusi.html`), label and search pages, archive pages,
   and Blogger-compatible feeds (`/feeds/posts/default`, `?alt=json`, `/-/Label`, `?alt=rss`) that the theme scripts read.

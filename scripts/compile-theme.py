@@ -200,6 +200,14 @@ def main(src, dst):
     # Visitor counter: one beacon per real page view (see worker/index.js hit()); the owner's own browser is skipped once /admin/ has been opened
     beacon = '<script>(function(){try{if(localStorage.getItem("k_me")||navigator.webdriver)return;var u=JSON.stringify({p:location.pathname,r:document.referrer});if(navigator.sendBeacon)navigator.sendBeacon("/api/hit",new Blob([u],{type:"text/plain"}));else fetch("/api/hit",{method:"POST",body:u,keepalive:true})}catch(e){}})()</script>'
     page = page.replace('</body>', beacon + '</body>', 1)
+    # Shelf covers: the collections script wraps the items in .kshelf-strip before the cover script runs (DOMContentLoaded), so it must look inside the strips, run at once, and tint each card from its cover
+    a = "[].forEach.call(L.children,function(el){"
+    b = "el.insertBefore(art,el.firstChild);el.classList.add('kt-on');"
+    c = "if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();})();\n//</script>"
+    assert a in page and b in page, 'shelf cover script changed'
+    page = page.replace(a, "[].forEach.call(L.querySelectorAll('h2.kafka-list-shelf,.kafka-item'),function(el){", 1)
+    page = page.replace(b, b + "var ti=art.querySelector('img');if(ti&&window.kTiny&&!el.style.getPropertyValue('--kbg'))el.style.setProperty('--kbg','url(\"'+kTiny(ti.src).replace(/\"/g,'%22')+'\")');", 1)
+    page = page.replace("if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();})();\n//</script>\n<script is:inline>//\n/* ===== v171", "go();document.addEventListener('DOMContentLoaded',go);window.addEventListener('load',go);})();\n//</script>\n<script is:inline>//\n/* ===== v171", 1)
     # Favicon: the priest king (public/favicon.ico, favicon-32.png, apple-touch-icon.png)
     page = re.sub(r'<link href="https://lh3\.googleusercontent\.com/d/13BZNy4hE52ijgDktiC3RfZ3fC62pxgye=w64" rel="icon">', '<link href="/favicon.ico" rel="icon" sizes="any"><link href="/favicon-32.png" rel="icon" type="image/png" sizes="32x32"><link href="/apple-touch-icon.png" rel="apple-touch-icon">', page)
     open(dst, 'w').write(page)

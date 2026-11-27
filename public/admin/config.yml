@@ -62,7 +62,8 @@ collections:
           - { name: seo_title, label: SEO title, widget: string, required: false, hint: "Title for Google and browser tabs, about 60 characters. Leave empty to use the title plus | Kafkaintherun." }
           - { name: description, label: Meta description, widget: text, required: false, hint: "Up to about 155 characters for Google. Leave empty to use the synopsis." }
           - { name: keywords, label: SEO tags (keywords), widget: list, required: false, hint: "Search keywords, press Enter after each." }
-      - { name: body, label: Post, widget: markdown, hint: "Switch at the top right: Rich Text (visual editing) or Markdown (plain text, where you can also paste HTML). Use + to add an image with caption, a pull quote or a highlight box." }
+      - { name: editor, widget: hidden, default: v2 }
+      - { name: body, label: Post, widget: kwrite, hint: "Write here. The HTML button switches to the HTML source. Photos and videos go in with the Photo and Video buttons." }
 
   - name: posts_html
     label: Posts from Blogger

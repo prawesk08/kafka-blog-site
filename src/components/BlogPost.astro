@@ -14,11 +14,11 @@ const ld = {
   headline: post.title, description: post.description || post.snippets.short,
   url: post.href, mainEntityOfPage: { '@type': 'WebPage', '@id': post.href },
   datePublished: post.date.iso8601, dateModified: post.lastUpdated.iso8601,
-  image: post.featuredImage || 'https://lh3.googleusercontent.com/d/1MI5eUhUk92qsXnV71Qraa94USqGbCIu0=w1200',
+  image: post.featuredImage || 'https://img.kafka.blog/googleusercontent.com/d/1MI5eUhUk92qsXnV71Qraa94USqGbCIu0=w1200',
   inLanguage: isNe ? 'ne' : 'en', articleSection: sections, keywords: sections,
   isPartOf: { '@type': 'Blog', '@id': D.blog.homepageUrl + '#blog', name: 'Kafkaintherun' },
   author: { '@type': 'Person', '@id': D.blog.homepageUrl + '#author', name: 'Basava', alternateName: 'बासभ', url: D.blog.homepageUrl },
-  publisher: { '@type': 'Organization', name: 'Kafkaintherun', logo: { '@type': 'ImageObject', url: 'https://lh3.googleusercontent.com/d/1GaxqgL5vx421lm9RcZkEAiNA_fY50s34=w400' } },
+  publisher: { '@type': 'Organization', name: 'Kafkaintherun', logo: { '@type': 'ImageObject', url: 'https://img.kafka.blog/googleusercontent.com/d/1GaxqgL5vx421lm9RcZkEAiNA_fY50s34=w400' } },
 };
 const { older, newer } = v.isPost ? neighbours(post) : {};
 const comments = post.comments || [];

@@ -37,7 +37,10 @@ const iso = (v) => (v instanceof Date ? v.toISOString() : new Date(String(v)).to
 const comments = fs.existsSync('content/comments.json') ? JSON.parse(fs.readFileSync('content/comments.json', 'utf8')) : {};
 
 const load = (dir, type) => walk(dir).filter((f) => /\.(html|md)$/.test(f)).map((f) => {
-  const { fm, body } = parse(f);
+  const parsed = parse(f);
+  const { body } = parsed;
+  // the /admin/ form groups fields into settings / image / share / seo; flatten them
+  const fm = { ...parsed.fm, ...(parsed.fm.settings || {}), ...(parsed.fm.image || {}), ...(parsed.fm.share || {}), ...(parsed.fm.seo || {}) };
   if (fm.draft) return null;
   const rel = path.relative(dir, f).replace(/\\/g, '/').replace(/\.(md|html)$/, '.html');
   const p = type === 'page' ? `/p/${rel}` : `/${rel}`;

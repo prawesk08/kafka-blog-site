@@ -52,7 +52,8 @@
   CMS.registerPreviewStyle('/admin/preview.css');
 
   var Post = function (props) {
-    var e = props.entry, g = function (k) { return e.getIn(['data', k]); };
+    var e = props.entry, groups = { category: 'settings', language: 'settings', tags: 'settings', dropcap: 'settings', cover: 'image', cover_alt: 'image', cover_caption: 'image', cover_credit: 'image', synopsis: 'share', social: 'share', seo_title: 'seo', description: 'seo', keywords: 'seo' };
+    var g = function (k) { return groups[k] ? e.getIn(['data', groups[k], k]) : e.getIn(['data', k]); };
     var cover = g('cover'), asset = cover ? props.getAsset(cover) : null;
     var tags = (g('tags') && g('tags').toJS) ? g('tags').toJS() : [];
     var ne = g('language') === 'lang-ne';

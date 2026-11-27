@@ -2146,7 +2146,7 @@ function start(){run();var t=0;new MutationObserver(function(){if(t)return;t=set
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start()})();
 //]]></script>
 <!-- v164: externalized theme JS hosted on Cloudflare Pages (assets.kafka.blog) -->
-<script defer='defer' src='https://assets.kafka.blog/kafka-core.js?v=235'/>
+<script defer='defer' src='https://assets.kafka.blog/kafka-core.js?v=236'/>
 <b:if cond='data:view.isPost'>
 <script defer='defer' src='https://assets.kafka.blog/kafka-post.js?v=192'/>
 </b:if>

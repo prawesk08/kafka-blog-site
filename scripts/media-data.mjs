@@ -58,7 +58,8 @@ export async function buildMediaData({ posts, out, site }) {
       const src = c.src || AUDIO + e.v16;
       const lang = c.lang || e.l || 'en';
       const title = c.title || e.title || post.title;
-      const description = c.description || post.snippets?.short || post.title;
+      // Same text as the page's meta description: short and specific. The long YouTube-style text stays on YouTube.
+      const description = post.description || post.snippets?.short || c.description || post.title;
       const keywords = c.keywords || [];
       const uploaded = c.uploadDate || '2026-11-27';
       const url = post.href;

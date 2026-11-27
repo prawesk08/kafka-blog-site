@@ -13,7 +13,7 @@ export default {
     const url = new URL(request.url);
     // after the move: kafka.blog -> www.kafka.blog, like Blogger did
     if (url.hostname === 'kafka.blog') { url.hostname = 'www.kafka.blog'; return Response.redirect(url.toString(), 301); }
-    let path;
+    let path, m0;
     try { path = decodeURIComponent(url.pathname); } catch { path = url.pathname; }
     const q = url.searchParams;
     const asset = (p, status) => serve(env, url, p, status);
@@ -24,6 +24,12 @@ export default {
     if (path === '/api/auth') return oauthStart(env, url);
     if (path === '/api/callback') return oauthCallback(env, url, request);
     if (path.startsWith('/feeds/')) return feeds(env, url, path, q);
+    if ((m0 = path.match(/^\/__proxy\/(assets|audio)\/(.*)$/))) {
+      // preview only: same-origin copy of assets./audio.kafka.blog JSON for hosts their CORS rules don't allow
+      const r = await fetch(`https://${m0[1]}.kafka.blog/${url.pathname.split('/').slice(3).join('/')}${url.search}`, { cf: { cacheTtl: 120 } });
+      const h = new Headers(r.headers); h.delete('access-control-allow-origin');
+      return new Response(r.body, { status: r.status, headers: h });
+    }
 
     let m;
     if ((m = path.match(/^\/(\d{4})\/(\d{2})\/?$/))) {

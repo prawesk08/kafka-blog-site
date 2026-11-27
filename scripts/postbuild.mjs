@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { posts, pages, SITE, BLOG, allLabels, plainText } from '../src/lib/site.js';
+import { buildMediaData } from './media-data.mjs';
 
 const OUT = 'dist';
 const w = (p, s) => { const f = path.join(OUT, p); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, s); };
@@ -132,4 +133,11 @@ for (const p of [...posts, ...pages]) {
   if (h !== o) fs.writeFileSync(f, h);
 }
 console.log(`postbuild: ${nLang} Nepali pages marked lang=ne, ${nLd} pages got WebPage JSON-LD`);
+
+// ---------- audio and video data: video sitemap for every film, JSON-LD written into the pages ----------
+const media = await buildMediaData({ posts, out: OUT, site: SITE });
+if (media.sitemapWritten) {
+  const rf = path.join(OUT, 'robots.txt');
+  fs.writeFileSync(rf, fs.readFileSync(rf, 'utf8').replace('Sitemap: https://assets.kafka.blog/video-sitemap.xml', `Sitemap: ${SITE}/video-sitemap.xml`));
+}
 console.log('postbuild: feeds, sitemaps, robots.txt, ads.txt written');

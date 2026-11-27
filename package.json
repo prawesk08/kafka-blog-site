@@ -1,0 +1,19 @@
+{
+  "name": "kafka-blog-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "theme": "python3 scripts/compile-theme.py theme/blogger-theme.xml src/layouts/Theme.astro src/data/theme-fragments.json",
+    "import": "node scripts/import-blogger.mjs",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "12.6.13",
+    "astro": "5.18.2"
+  },
+  "devDependencies": {
+    "linkedom": "^0.18.9"
+  }
+}

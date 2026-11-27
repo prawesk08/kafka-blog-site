@@ -1,0 +1,72 @@
+---
+// The Blogger widgets of the Kafkaintherun theme, rebuilt from post data.
+// Markup matches what Blogger rendered (same ids and classes), because kafka-core/ui/post/collections JS
+// and the theme's inline scripts look for it.
+import BlogPost from './BlogPost.astro';
+import { popularPosts, allLabels, archiveMonths } from '../lib/site.js';
+const { type, id, title, D } = Astro.props;
+const v = D.view;
+---
+{type === 'PopularPosts' && (
+  <div class="widget PopularPosts" data-version="2" id={id}>
+    <div id="kafka-pop">{popularPosts.map((p) => <a href={p.href}>{p.title}</a>)}</div>
+  </div>
+)}
+{type === 'Blog' && (
+  <div class="widget Blog" data-version="2" id={id}>
+    {v.isSingleItem ? (
+      D.posts.map((post) => <BlogPost post={post} D={D} />)
+    ) : (
+      <Fragment>
+        <div class="list-head">
+          {v.isLabelSearch ? (
+            <Fragment><p class="count">Category</p><h1>{v.search.label}</h1></Fragment>
+          ) : v.isSearch && v.search.query ? (
+            <Fragment><p class="count">Search results for</p><h1>{v.search.query}</h1></Fragment>
+          ) : (
+            <Fragment><p class="count">Everything, newest first</p>{v.isHomepage ? <h2>Archive</h2> : <h1>Archive</h1>}</Fragment>
+          )}
+          <img alt="" class="head-doodle" data-doodle="moon" />
+        </div>
+        {D.posts.map((post) => (
+          <article class="kcard" data-id={post.id}><span class="lbls" hidden="hidden">{post.labelNames.map((l) => <i>{l}</i>)}</span>
+            <a aria-hidden="true" class="pic" href={post.href} tabindex="-1">{post.featuredImage ? <img alt="" src={post.featuredImage} loading="lazy" /> : <img alt="" loading="lazy" />}</a>
+            <div><span class="chip-slot"></span>
+              <h3><a href={post.href}>{post.title}</a></h3>
+              <p class="exc">{post.snippets.short}</p>
+              <p class="by" data-date={post.date.iso8601}>{String(post.date)}</p>
+            </div>
+          </article>
+        ))}
+        <div class="pager">
+          {D.newerPageUrl ? <a href={D.newerPageUrl}>&#8249; Newer posts <span class="ne" lang="ne">नयाँ</span></a> : <span></span>}
+          {D.olderPageUrl && <a href={D.olderPageUrl}>Older posts <span class="ne" lang="ne">पुराना</span> &#8250;</a>}
+        </div>
+      </Fragment>
+    )}
+  </div>
+)}
+{type === 'Text' && (
+  <div class="widget Text" data-version="2" id={id}>
+    <h3 class="title">{title}</h3>
+    <div class="widget-content"></div>
+  </div>
+)}
+{type === 'BlogArchive' && (
+  <div class="widget BlogArchive" data-version="2" id={id}>
+    <h3 class="title">{title}</h3>
+    <div class="widget-content"><div id="ArchiveList"><div id={id + '_ArchiveList'}>
+      <ul class="flat">
+        {archiveMonths().map((m) => <li class="archivedate"><a href={m.url}>{m.name}<span class="post-count">{m.count}</span></a></li>)}
+      </ul>
+    </div></div></div>
+  </div>
+)}
+{type === 'Label' && (
+  <div class="widget Label" data-version="2" id={id}>
+    <h3 class="title">{title}</h3>
+    <div class="widget-content list-label-widget-content">
+      <ul>{allLabels().map((l) => <li><a class="label-name" href={l.url}>{l.name}</a></li>)}</ul>
+    </div>
+  </div>
+)}

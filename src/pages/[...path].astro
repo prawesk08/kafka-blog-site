@@ -1,0 +1,52 @@
+---
+// Every HTML page of the site. The path param is the output file name without ".html".
+import Theme from '../layouts/Theme.astro';
+import { posts, pages, makeD, SITE, allLabels, archiveMonths } from '../lib/site.js';
+
+export const HOME_PAGE = 10;   // Blogger: 10 posts on the homepage
+export const LABEL_PAGE = 20;  // Blogger: 20 posts on label pages
+
+export function getStaticPaths() {
+  const out = [];
+  const chunk = (a, n) => Array.from({ length: Math.max(1, Math.ceil(a.length / n)) }, (_, i) => a.slice(i * n, i * n + n));
+  const older = (list, n) => list[n] ? list[n] : null;
+
+  // homepage and its "Older posts" pages (/search?updated-max=... is mapped to these by the Worker)
+  const home = chunk(posts, 10);
+  home.forEach((list, i) => {
+    const path = i === 0 ? 'index' : `search/page/${i + 1}`;
+    const next = home[i + 1] ? `${SITE}/search?updated-max=${encodeURIComponent(list[list.length - 1].date.iso8601)}&max-results=10` : null;
+    const prev = i === 0 ? null : (i === 1 ? `${SITE}/` : `${SITE}/search?updated-max=${encodeURIComponent(home[i - 2][home[i - 2].length - 1].date.iso8601)}&max-results=10`);
+    out.push({ params: { path }, props: { D: makeD({ kind: i === 0 ? 'home' : 'search', list, url: i === 0 ? `${SITE}/` : `${SITE}/search`, olderPageUrl: next, newerPageUrl: prev }) } });
+  });
+
+  for (const p of posts) out.push({ params: { path: p.path.slice(1).replace(/\.html$/, '') }, props: { D: makeD({ kind: 'post', item: p, url: p.href }) } });
+  for (const p of pages) out.push({ params: { path: p.path.slice(1).replace(/\.html$/, '') }, props: { D: makeD({ kind: 'page', item: p, url: p.href }) } });
+
+  // label pages: search/label/<Label>.html, then search/label/<Label>/2.html ...
+  for (const l of allLabels()) {
+    const lp = posts.filter((p) => p.labelNames.includes(l.name));
+    const ch = chunk(lp, 20);
+    ch.forEach((list, i) => {
+      const base = `search/label/${l.name}`;
+      const url = `${SITE}/search/label/${encodeURIComponent(l.name)}`;
+      const next = ch[i + 1] ? `${url}?updated-max=${encodeURIComponent(list[list.length - 1].date.iso8601)}&max-results=20&start=${(i + 1) * 20}&by-date=false` : null;
+      const prev = i === 0 ? null : (i === 1 ? url : `${url}?updated-max=${encodeURIComponent(ch[i - 2][ch[i - 2].length - 1].date.iso8601)}&max-results=20&start=${(i - 1) * 20}&by-date=false`);
+      out.push({ params: { path: i === 0 ? base : `${base}/${i + 1}` }, props: { D: makeD({ kind: 'label', label: l.name, list, title: l.name, url, olderPageUrl: next, newerPageUrl: prev }) } });
+    });
+  }
+
+  // monthly archives: 2025/04/index.html
+  for (const m of archiveMonths()) {
+    out.push({ params: { path: `${m.y}/${m.m}/index` }, props: { D: makeD({ kind: 'archive', list: m.posts, url: m.url, title: 'Archive' }) } });
+  }
+
+  // search results shell: the Worker fills in the cards for /search?q=...
+  out.push({ params: { path: '_search' }, props: { D: makeD({ kind: 'search', list: [], query: '\u0000Q\u0000', url: `${SITE}/search` }) } });
+  // 404
+  out.push({ params: { path: '404' }, props: { D: makeD({ kind: 'error', error: true, list: [], url: `${SITE}/` }) } });
+  return out;
+}
+const { D } = Astro.props;
+---
+<Theme D={D} />

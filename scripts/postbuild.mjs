@@ -104,4 +104,32 @@ w('ads.txt', 'google.com, pub-9227280103943233, DIRECT, f08c47fec0942fa0\n');
 
 // ---------- list index for the Worker (search, paging) ----------
 w('_kidx.json', JSON.stringify(posts.map((p) => ({ i: p.id, u: p.href, t: p.title, d: p.date.iso8601, ds: String(p.date), l: p.labelNames, f: p.featuredImage, s: p.snippets.short, q: (p.title + ' ' + plainText(p.body).slice(0, 4000) + ' ' + p.labelNames.join(' ')).toLowerCase() }))));
+
+// ---------- page-level fixes written into the built HTML ----------
+// 1) Nepali posts and pages say so in the HTML itself (html lang, og:locale), not only after the page script runs,
+//    so link previews and crawlers that do not run scripts see ne / ne_NP. A title in Devanagari marks a Nepali page.
+// 2) Static pages (About, Books, ...) get WebPage structured data, like posts already have BlogPosting.
+const DEV = /[\u0900-\u097F]/;
+let nLang = 0, nLd = 0;
+for (const p of [...posts, ...pages]) {
+  const rel = String(p.path || new URL(p.href).pathname).replace(/^\//, '');
+  const f = path.join(OUT, rel);
+  if (!fs.existsSync(f)) continue;
+  let h = fs.readFileSync(f, 'utf8');
+  const o = h;
+  if (p.lang === 'ne' || DEV.test(p.title)) {
+    h = h.replace('<html lang="en">', '<html lang="ne">')
+      .replace('<meta content="en_US" property="og:locale"><meta content="ne_NP" property="og:locale:alternate">', '<meta content="ne_NP" property="og:locale"><meta content="en_US" property="og:locale:alternate">');
+    if (h !== o) nLang++;
+  }
+  if (p.type === 'PAGE' || pages.includes(p)) {
+    if (!h.includes('<script type="application/ld+json">')) {
+      const ld = { '@context': 'https://schema.org', '@type': 'WebPage', name: p.title, url: p.href, inLanguage: p.lang === 'ne' || DEV.test(p.title) ? 'ne' : 'en', isPartOf: { '@type': 'WebSite', name: BLOG.title, url: SITE + '/' } };
+      h = h.replace('</head>', `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script></head>`);
+      nLd++;
+    }
+  }
+  if (h !== o) fs.writeFileSync(f, h);
+}
+console.log(`postbuild: ${nLang} Nepali pages marked lang=ne, ${nLd} pages got WebPage JSON-LD`);
 console.log('postbuild: feeds, sitemaps, robots.txt, ads.txt written');

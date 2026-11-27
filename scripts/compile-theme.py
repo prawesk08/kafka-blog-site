@@ -211,11 +211,11 @@ def main(src, dst):
     # Small, subtle shelf covers (owner, 2026-11-27): narrower cover column, softer shadow, text tiles shrink to the title only
     nn = ''.join(':not(#kc%d)' % i for i in range(1, 15))
     S = 'html body .kafka-list[data-list]' + nn + ' .kshelf-strip>.kafka-item'
-    css = (S + '{grid-template-columns:42px minmax(0,1fr)!important;column-gap:11px!important}'
-           + S + '>.kt-art{width:42px!important;opacity:.82!important;border-radius:2px!important;box-shadow:0 1px 2px rgba(60,40,20,.18)!important;margin-top:2px!important}'
+    # every card keeps one text column (so all cards line up); a real cover is a small corner thumbnail at the top right, no cover = nothing
+    css = (S + '{grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"tag" "title" "by" "note" "quote" "free"!important}'
+           + S + '>.kt-art{position:absolute!important;top:12px!important;right:12px!important;left:auto!important;width:38px!important;margin:0!important;opacity:.85!important;border-radius:2px!important;box-shadow:0 1px 2px rgba(60,40,20,.2)!important;z-index:2!important}'
            + S + '>.kt-art img{border-radius:2px!important}'
-           # no real cover: no slab, the text takes the full card width
-           + S + ':not(:has(.kt-art img)){grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"tag" "title" "by" "note" "quote" "free"!important}'
+           + S + ':has(.kt-art img)>h3,' + S + ':has(.kt-art img)>.kafka-item-tag{padding-right:48px!important}'
            + S + '>.kt-art:not(:has(img)){display:none!important}')
     page = page.replace('</head>', '<style is:inline>' + css + '</style></head>', 1)
     # Favicon: the priest king (public/favicon.ico, favicon-32.png, apple-touch-icon.png)

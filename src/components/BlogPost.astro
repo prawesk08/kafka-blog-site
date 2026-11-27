@@ -11,7 +11,7 @@ const skip = ['pinned', 'top', 'lang-ne', 'lang-en'];
 const sections = post.labelNames.filter((l) => !skip.includes(l)).join(', ');
 const ld = {
   '@context': 'https://schema.org', '@type': 'BlogPosting',
-  headline: post.title, description: post.snippets.long,
+  headline: post.title, description: post.description || post.snippets.short,
   url: post.href, mainEntityOfPage: { '@type': 'WebPage', '@id': post.href },
   datePublished: post.date.iso8601, dateModified: post.lastUpdated.iso8601,
   image: post.featuredImage || 'https://lh3.googleusercontent.com/d/1MI5eUhUk92qsXnV71Qraa94USqGbCIu0=w1200',

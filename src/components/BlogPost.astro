@@ -1,6 +1,7 @@
 ---
 // The theme's `kafkaPost` includable (post page and static page), rebuilt from post data.
 import frag from '../data/theme-fragments.json';
+import cfg from '../data/site-config.json';
 import { neighbours } from '../lib/nav.js';
 const { post, D } = Astro.props;
 const v = D.view;
@@ -68,7 +69,14 @@ const fmt = (iso) => new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_Y
             </li>
           ))}
         </ol></div></div></div>
-        <div class="comment-form" id="kcomment-form"></div>
+        <div class="comment-form" id="kcomment-form">
+          {cfg.cusdisAppId && (
+            <Fragment>
+              <div id="cusdis_thread" data-host="https://cusdis.com" data-app-id={cfg.cusdisAppId} data-page-id={post.id} data-page-url={post.href} data-page-title={post.title} data-theme="auto"></div>
+              <script is:inline async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+            </Fragment>
+          )}
+        </div>
       </section>
     </section>
   </Fragment>

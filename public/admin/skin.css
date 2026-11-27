@@ -1,0 +1,104 @@
+/* Modern skin for the /admin/ editor. Loaded last, so it wins over Decap's defaults. */
+:root{
+  --k-bg:#f4f5f8; --k-card:#ffffff; --k-line:#e4e7ee; --k-ink:#171b26; --k-mute:#667085; --k-soft:#98a2b3;
+  --k-accent:#4361ee; --k-accent-d:#3149c9; --k-accent-soft:#eaf0ff; --k-r:14px;
+  --k-shadow:0 1px 2px rgba(16,24,40,.05),0 4px 16px rgba(16,24,40,.05);
+}
+html,body{background:var(--k-bg)!important;color:var(--k-ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;-webkit-font-smoothing:antialiased}
+*{scrollbar-width:thin;scrollbar-color:#cfd5e1 transparent}
+
+/* top bar */
+[class*="AppHeader-css"],[class*="ToolbarContainer"]{background:rgba(255,255,255,.92)!important;backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--k-line)!important;box-shadow:none!important}
+[class*="AppHeaderNavLink"],[class*="AppHeaderButton"]{border-radius:999px!important;font-weight:600!important;font-size:14px!important;color:var(--k-mute)!important;padding:8px 16px!important}
+[class*="AppHeaderButton"][class*="buttonActive"]{background:var(--k-accent-soft)!important;color:var(--k-accent)!important}
+[class*="AppHeaderQuickNewButton"]{background:var(--k-accent)!important;color:#fff!important;border-radius:999px!important;font-weight:600!important;box-shadow:0 4px 12px rgba(67,97,238,.3)}
+[class*="AppHeaderSiteLink"]{color:var(--k-mute)!important;font-weight:500!important}
+[class*="ToolbarSectionBackLink"]{border-right:1px solid var(--k-line)!important}
+[class*="BackCollection"]{color:var(--k-mute)!important;font-weight:500!important}
+[class*="BackStatus"]{font-weight:600!important}
+[class*="PublishButton"]{background:var(--k-accent)!important;border-radius:999px!important;font-weight:600!important;box-shadow:0 4px 12px rgba(67,97,238,.28)}
+[class*="PublishButton"]:hover{background:var(--k-accent-d)!important}
+[class*="BackStatusUnchanged"]{color:#16a34a!important}
+
+/* list screen */
+[class*="SidebarContainer"],[class*="CollectionTopContainer"]{background:var(--k-card)!important;border:1px solid var(--k-line)!important;border-radius:var(--k-r)!important;box-shadow:var(--k-shadow)!important}
+[class*="SidebarNavLink"]{border-radius:10px!important;margin:2px 8px!important;border-left:0!important;font-weight:600!important}
+[class*="sidebarNavLinkActive"]{background:var(--k-accent-soft)!important;color:var(--k-accent)!important}
+[class*="CollectionTopNewButton"]{background:var(--k-accent)!important;color:#fff!important;border-radius:999px!important;font-weight:600!important;padding:0 22px!important}
+[class*="SearchInput"]{border-radius:10px!important;background:var(--k-bg)!important}
+
+/* editor canvas */
+[class*="EditorContainer"],[class*="NoPreviewContainer"],[class*="PreviewPaneContainer"]{background:var(--k-bg)!important}
+.kform{padding-top:30px!important}
+
+/* fields: label above, soft inputs */
+[class*="FieldLabel"]{background:transparent!important;color:var(--k-mute)!important;font:600 12px/1.2 Inter,sans-serif!important;letter-spacing:.02em!important;text-transform:none!important;padding:0 0 6px!important;border:0!important;border-radius:0!important;display:block;position:static!important}
+[class*="ControlContainer"]{margin-top:0!important}
+[class*="ControlHint"]{color:var(--k-soft)!important;font-size:12px!important;line-height:1.45;margin-top:6px!important}
+[class*="ControlContainer"] input[type=text],[class*="ControlContainer"] input[type=number],[class*="ControlContainer"] textarea,[class*="ControlContainer"] [class*="control"]{background:#fff!important;border:1px solid var(--k-line)!important;border-radius:10px!important;box-shadow:none!important;padding:10px 12px!important;font:400 14px/1.4 Inter,sans-serif!important;color:var(--k-ink)!important;transition:border-color .15s,box-shadow .15s}
+[class*="ControlContainer"] input:focus,[class*="ControlContainer"] textarea:focus{border-color:var(--k-accent)!important;box-shadow:0 0 0 4px var(--k-accent-soft)!important;outline:none}
+[class*="DateTimeControl"] input{font-size:13px!important}
+[class*="Buttons"]>button,[class*="widget-Buttons"]{background:var(--k-bg)!important;border-radius:8px!important;color:var(--k-ink)!important;font-weight:600!important}
+[class*="ToggleBackground"]{background:#d0d5dd!important}
+[class*="ToggleBackground"][class*="Boolean"]{background:#d0d5dd}
+[class*="FileWidgetButton"]{background:var(--k-accent-soft)!important;color:var(--k-accent)!important;border-radius:8px!important;font-weight:600!important}
+
+/* title and subtitle: typed straight onto the page */
+.kform>:nth-child(1),.kform>:nth-child(2){background:transparent!important}
+.kform>:nth-child(1) [class*="FieldLabel"],.kform>:nth-child(2) [class*="FieldLabel"]{display:none!important}
+.kform>:nth-child(1) [class*="ControlHint"],.kform>:nth-child(2) [class*="ControlHint"]{display:none}
+.kform [class*="ControlContainer"] input[type=text][id^="title-field"]{font:700 44px/1.15 Fraunces,Georgia,serif!important;letter-spacing:-.01em;color:var(--k-ink)!important;border:0!important;background:transparent!important;box-shadow:none!important;padding:6px 0!important}
+.kform [class*="ControlContainer"] input[type=text][id^="subtitle-field"]{font:400 22px/1.4 Fraunces,Georgia,serif!important;color:var(--k-mute)!important;border:0!important;background:transparent!important;box-shadow:none!important;padding:0 0 14px!important}
+.kform input[id^="title-field"]::placeholder,.kform input[id^="subtitle-field"]::placeholder{color:#c2c8d4}
+
+/* sidebar */
+.kform>:nth-child(n+3):nth-child(-n+8){background:var(--k-card)!important;border:1px solid var(--k-line)!important;border-radius:var(--k-r)!important;box-shadow:var(--k-shadow)!important;padding:14px 16px!important;margin-bottom:14px!important}
+.kform>:nth-child(n+5):nth-child(-n+8){padding:0!important;overflow:hidden}
+.kform>:nth-child(n+5):nth-child(-n+8) [class*="ControlTopbar"]{background:var(--k-card)!important;padding:0!important;border:0!important}
+.kform>:nth-child(n+5):nth-child(-n+8) [class*="TopBarContainer"]{background:var(--k-card)!important;border:0!important;border-radius:0!important;padding:14px 16px!important;font:600 14px Inter,sans-serif!important;color:var(--k-ink)!important}
+.kform>:nth-child(n+5):nth-child(-n+8) [class*="TopBarContainer"] *{font:600 14px Inter,sans-serif!important;color:var(--k-ink)!important}
+.kform>:nth-child(n+5):nth-child(-n+8) [class*="FieldLabel"]{display:none!important}
+.kform>:nth-child(n+5):nth-child(-n+8) > div:last-child{padding:0 16px 14px}
+.kform>:nth-child(n+5):nth-child(-n+8) [class*="ExpandButtonContainer"]{background:transparent!important}
+
+/* writing sheet */
+.kform>:nth-child(9) [class*="FieldLabel"]{display:none!important}
+.kw{border:1px solid var(--k-line)!important;border-radius:var(--k-r)!important;box-shadow:var(--k-shadow);background:#fff}
+.kw-bar{background:#fff!important;border-bottom:1px solid var(--k-line)!important;padding:10px 12px!important;gap:6px!important}
+.kw-b,.kw-sel,.kw-cl{border:0!important;background:transparent!important;color:#344054!important;height:32px!important;border-radius:8px!important;font:500 13px Inter,sans-serif!important}
+.kw-b:hover,.kw-sel:hover,.kw-cl:hover{background:#f2f4f7!important}
+.kw-on{background:var(--k-accent-soft)!important;color:var(--k-accent)!important}
+.kw-sel{padding:0 8px!important;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23667085' stroke-width='1.6'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 8px center!important;padding-right:24px!important}
+.kw-sep{background:var(--k-line)!important;margin:0 4px!important}
+.kw-editor .ql-editor{padding:34px 44px!important;font:400 19px/1.8 Lora,Georgia,serif!important;color:#1d2433}
+.kw-src{background:#0f172a;color:#d7e3ff;border-radius:0 0 14px 14px}
+.kw-hl span{border-radius:3px}
+
+/* preview */
+[class*="PreviewPaneContainer"][class*="ControlPane"]{background:var(--k-bg)!important}
+@media(max-width:700px){
+  .kform [class*="ControlContainer"] input[type=text][id^="title-field"]{font-size:30px!important}
+  .kw-editor .ql-editor{padding:18px!important;font-size:17px!important}
+}
+
+/* fixes: date row, draft toggle, accordion spacing */
+.kform>:nth-child(3) [class*="ControlContainer"]>div,.kform>:nth-child(3) [class*="DateTime"]{display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:100%}
+.kform>:nth-child(3) button{max-width:100%;flex:0 0 auto}
+.kform>:nth-child(4){border:1px solid var(--k-line)!important}
+.kform>:nth-child(4) [class*="ControlContainer"]{border:0!important;padding:0!important;background:transparent!important}
+.kform>:nth-child(n+5):nth-child(-n+8) > div:last-child:empty{display:none}
+.kform>:nth-child(n+5):nth-child(-n+8) [class*="ObjectWidgetTopBar"],.kform>:nth-child(n+5):nth-child(-n+8) [class*="ControlTopbar"]{margin:0!important}
+.kform>:nth-child(3) [class*="ControlContainer"] *,.kform>:nth-child(4) [class*="ControlContainer"] *{border-color:transparent!important;box-shadow:none!important}
+.kform>:nth-child(3) [class*="ControlContainer"] input{border:0!important;padding:4px 0!important;background:transparent!important}
+.kform>:nth-child(3) [class*="ControlContainer"] button{background:var(--k-bg)!important;border-radius:999px!important}
+.kform>:nth-child(n+5):nth-child(-n+8){min-height:0!important;height:auto!important}
+.kform>:nth-child(n+5):nth-child(-n+8) [class*="TopBarContainer"]{min-height:0!important;height:auto!important;padding:14px 16px!important;line-height:1.3!important}
+.kform>:nth-child(n+5):nth-child(-n+8)>div{margin:0!important}
+/* v3: targets the container itself */
+.kform>:nth-child(3) [class*="DateTimeControl"],.kform>:nth-child(4)>div:not([class*="ControlTopbar"]):not([class*="ControlHint"]){border:0!important;box-shadow:none!important;padding:2px 0!important;background:transparent!important;min-height:0!important}
+.kform>:nth-child(3) [class*="DateTimeControl"] input{border:0!important;padding:4px 0!important;background:transparent!important;width:100%}
+.kform>:nth-child(3) [class*="Buttons"]{display:flex;gap:8px;margin-top:6px}
+.kform>:nth-child(n+5):nth-child(-n+8)>div>div:first-of-type{border:0!important}
+.kform>:nth-child(n+5):nth-child(-n+8) [class*="TopBarContainer"]{display:flex!important;align-items:center!important;padding:10px 16px!important;min-height:0!important}
+.kform>:nth-child(n+5):nth-child(-n+8) [class*="ExpandButtonContainer"]{margin:0!important;display:flex;align-items:center}
+.kform>:nth-child(n+5):nth-child(-n+8)>div>div[class]:not([class*="TopBar"]):not([class*="ControlTopbar"]){border:0!important;box-shadow:none!important}

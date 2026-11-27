@@ -3,6 +3,7 @@
 <html b:css='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true' b:templateVersion='1.0.0' lang='en' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
 <head>
 <meta charset='UTF-8'/>
+<script>(function(){var B=1440,h=document.documentElement;function a(){var w=innerWidth,p=innerHeight&gt;w;var z=w&gt;B&amp;&amp;!(p&amp;&amp;w&lt;=1100)?Math.min(w/B,2.4):1;h.style.zoom=z===1?'':String(z)}a();addEventListener('resize',a)})();</script>
 <meta content='BpyzNeKvhTT47b64cfZy' name='follow.it-verification-code'/>
 <script>//<![CDATA[
 /* v176: keep the follow.it sign-up form address even when the main script resets the site settings */
@@ -339,7 +340,7 @@ document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&
 <body>
 <b:if cond='data:view.isError'><div data-view='error' hidden='hidden' id='kview'/>
 <b:elseif cond='data:view.isHomepage'/><div data-view='home' hidden='hidden' id='kview'/>
-<b:elseif cond='data:view.isPost'/><div data-view='post' hidden='hidden' id='kview'/>
+<b:elseif cond='data:view.isPost'/><div data-view='post' hidden='hidden' id='kview'/><script>document.body.classList.add('is-post')</script>
 <b:elseif cond='data:view.isPage'/><div data-view='page' expr:data-title='data:view.title' hidden='hidden' id='kview'/>
 <b:elseif cond='data:view.isLabelSearch'/><div data-view='label' expr:data-label='data:view.search.label' hidden='hidden' id='kview'/>
 <b:elseif cond='data:view.isSearch'/><div data-view='search' hidden='hidden' id='kview'/>
@@ -2145,13 +2146,13 @@ function start(){run();var t=0;new MutationObserver(function(){if(t)return;t=set
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start()})();
 //]]></script>
 <!-- v164: externalized theme JS hosted on Cloudflare Pages (assets.kafka.blog) -->
-<script defer='defer' src='https://assets.kafka.blog/kafka-core.js?v=233'/>
+<script defer='defer' src='https://assets.kafka.blog/kafka-core.js?v=234'/>
 <b:if cond='data:view.isPost'>
-<script defer='defer' src='https://assets.kafka.blog/kafka-post.js?v=191'/>
+<script defer='defer' src='https://assets.kafka.blog/kafka-post.js?v=192'/>
 </b:if>
 <script defer='defer' src='https://assets.kafka.blog/kafka-ui.js?v=187'/>
-<link href='https://assets.kafka.blog/kafka-collections.css?v=8' rel='stylesheet'/>
-<script defer='defer' src='https://assets.kafka.blog/kafka-collections.js?v=8'/>
+<link href='https://assets.kafka.blog/kafka-collections.css?v=9' rel='stylesheet'/>
+<script defer='defer' src='https://assets.kafka.blog/kafka-collections.js?v=9'/>
 <script defer='defer' src='https://assets.kafka.blog/kafka-audio-schema.js?v=4'/>
 <script>//<![CDATA[
 /* v169 list artwork: covers and poster tiles on Books, Movies, Songs, Series */

@@ -12,5 +12,7 @@
   },
   // public id of the GitHub OAuth App used by the /admin editor sign-in; GITHUB_CLIENT_SECRET is set as a Worker secret in the dashboard
   "vars": { "GITHUB_CLIENT_ID": "Ov23li2m1RguvnoE7mVx" },
+  // visitor counts for the Stats tab in /admin/ (tables views, refs)
+  "d1_databases": [{ "binding": "DB", "database_name": "kafka-blog-stats", "database_id": "631ec31c-ff79-4967-b7cf-cd1e76d0072d" }],
   "observability": { "enabled": true }
 }

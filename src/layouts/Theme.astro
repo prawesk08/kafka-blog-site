@@ -891,4 +891,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);
 })();
 //</script>
-</body></html>
+<script>(function(){try{if(localStorage.getItem("k_me")||navigator.webdriver)return;var u=JSON.stringify({p:location.pathname,r:document.referrer});if(navigator.sendBeacon)navigator.sendBeacon("/api/hit",new Blob([u],{type:"text/plain"}));else fetch("/api/hit",{method:"POST",body:u,keepalive:true})}catch(e){}})()</script></body></html>

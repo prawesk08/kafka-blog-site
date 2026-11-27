@@ -197,6 +197,9 @@ def main(src, dst):
     sub('<meta content={D.view.title} property="og:title">', '<meta content={D.view.seoTitle || D.view.title} property="og:title">')
     sub('<meta content={D.view.title} name="twitter:title">', '<meta content={D.view.seoTitle || D.view.title} name="twitter:title">{D.view.keywords ? (<meta name="keywords" content={D.view.keywords}>) : null}')
     sub('<meta content={D.view.description} property="og:description">', '<meta content={D.view.social || D.view.description} property="og:description">')
+    # Visitor counter: one beacon per real page view (see worker/index.js hit()); the owner's own browser is skipped once /admin/ has been opened
+    beacon = '<script>(function(){try{if(localStorage.getItem("k_me")||navigator.webdriver)return;var u=JSON.stringify({p:location.pathname,r:document.referrer});if(navigator.sendBeacon)navigator.sendBeacon("/api/hit",new Blob([u],{type:"text/plain"}));else fetch("/api/hit",{method:"POST",body:u,keepalive:true})}catch(e){}})()</script>'
+    page = page.replace('</body>', beacon + '</body>', 1)
     # Favicon: the priest king (public/favicon.ico, favicon-32.png, apple-touch-icon.png)
     page = re.sub(r'<link href="https://lh3\.googleusercontent\.com/d/13BZNy4hE52ijgDktiC3RfZ3fC62pxgye=w64" rel="icon">', '<link href="/favicon.ico" rel="icon" sizes="any"><link href="/favicon-32.png" rel="icon" type="image/png" sizes="32x32"><link href="/apple-touch-icon.png" rel="apple-touch-icon">', page)
     open(dst, 'w').write(page)

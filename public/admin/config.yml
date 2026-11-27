@@ -1,0 +1,72 @@
+# Decap CMS: the post editor at /admin/. Each post is a file in content/posts/<year>/<month>/<slug>.
+# Its web address is the same path: content/posts/2026/12/my-poem.md -> https://www.kafka.blog/2026/12/my-poem.html
+media_folder: public/media
+public_folder: /media
+site_url: https://www.kafka.blog
+display_url: https://www.kafka.blog
+locale: en
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  - name: posts
+    label: Posts
+    label_singular: Post
+    description: New posts, written in the editor. Nepali and English both work. Add the label lang-ne or lang-en.
+    folder: content/posts
+    path: "{{year}}/{{month}}/{{slug}}"
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} ({{year}}-{{month}})"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Publish date, widget: datetime, hint: "A date in the future keeps the post hidden until then (after the next rebuild)." }
+      - { name: labels, label: Labels, widget: list, default: [lang-en], hint: "Comma separated, for example: Poetry, English, English Poetry, lang-en. Use lang-ne for Nepali posts. pinned and top work as before." }
+      - { name: description, label: Search description, widget: text, required: false, hint: "One or two sentences for Google and link previews." }
+      - { name: draft, label: Draft (not published), widget: boolean, default: false, required: false }
+      - { name: body, label: Post, widget: markdown }
+
+  - name: posts_html
+    label: Posts from Blogger
+    label_singular: Blogger post
+    description: The 139 posts brought over from Blogger. Their text is HTML, kept exactly as Blogger had it.
+    folder: content/posts
+    path: "{{year}}/{{month}}/{{slug}}"
+    extension: html
+    format: frontmatter
+    create: false
+    delete: false
+    summary: "{{title}} ({{year}}-{{month}})"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Publish date, widget: datetime }
+      - { name: updated, label: Last updated, widget: datetime, required: false }
+      - { name: labels, label: Labels, widget: list }
+      - { name: description, label: Search description, widget: text, required: false }
+      - { name: blogger_id, label: Blogger id (do not change), widget: hidden }
+      - { name: draft, label: Draft (not published), widget: boolean, default: false, required: false }
+      - { name: body, label: Post HTML, widget: code, default_language: html, output_code_only: true, allow_language_selection: false }
+
+  - name: pages
+    label: Pages
+    label_singular: Page
+    description: Pages such as About, Books, Songs. Address is /p/<name>.html.
+    folder: content/pages
+    extension: html
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Date, widget: datetime }
+      - { name: updated, label: Last updated, widget: datetime, required: false }
+      - { name: labels, label: Labels, widget: list, required: false, default: [] }
+      - { name: description, label: Search description, widget: text, required: false }
+      - { name: blogger_id, label: Blogger id (do not change), widget: hidden, required: false }
+      - { name: draft, label: Draft (not published), widget: boolean, default: false, required: false }
+      - { name: body, label: Page HTML, widget: code, default_language: html, output_code_only: true, allow_language_selection: false }

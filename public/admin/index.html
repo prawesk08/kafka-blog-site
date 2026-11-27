@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Kafkaintherun editor</title>
+</head>
+<body>
+  <script>window.CMS_MANUAL_INIT = true;</script>
+  <script src="https://unpkg.com/decap-cms@3.17.3/dist/decap-cms.js"></script>
+  <script>
+    // The editor signs in with GitHub through this site's own /api/auth (see worker/index.js), saves each post as a
+    // file in the kafka-blog-site repo, and Cloudflare rebuilds the site about a minute later.
+    CMS.init({ config: { backend: { name: 'github', repo: 'prawesk08/kafka-blog-site', branch: 'main', base_url: location.origin, auth_endpoint: 'api/auth' } } });
+  </script>
+</body>
+</html>

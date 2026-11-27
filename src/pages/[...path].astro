@@ -1,0 +1,45 @@
+---
+// Every HTML page of the site. The path param is the output file name without ".html".
+import Theme from '../layouts/Theme.astro';
+import { posts, pages, makeD, SITE, allLabels, archiveMonths } from '../lib/site.js';
+
+
+export function getStaticPaths() {
+  const out = [];
+
+  // homepage: newest 10. Older pages (/search?updated-max=...) are rendered by the Worker from _list.html.
+  {
+    const list = posts.slice(0, 10);
+    out.push({ params: { path: 'index' }, props: { D: makeD({ kind: 'home', list, url: `${SITE}/`, olderPageUrl: posts[10] ? `${SITE}/search?updated-max=${list[9].date.iso8601}&max-results=10` : null }) } });
+  }
+  for (const p of posts) out.push({ params: { path: p.path.slice(1).replace(/\.html$/, '') }, props: { D: makeD({ kind: 'post', item: p, url: p.href }) } });
+  for (const p of pages) out.push({ params: { path: p.path.slice(1).replace(/\.html$/, '') }, props: { D: makeD({ kind: 'page', item: p, url: p.href }) } });
+
+  // label pages: first 20 (search/label/<Label>.html); older pages come from the Worker
+  for (const l of allLabels()) {
+    const lp = posts.filter((p) => p.labelNames.includes(l.name));
+    const list = lp.slice(0, 20);
+    const url = `${SITE}/search/label/${encodeURIComponent(l.name)}`;
+    const older = lp[20] ? `${url}?updated-max=${list[19].date.iso8601}&max-results=20&start=20&by-date=false` : null;
+    out.push({ params: { path: `search/label/${l.name}` }, props: { D: makeD({ kind: 'label', label: l.name, list, url, olderPageUrl: older }) } });
+  }
+
+  // monthly archives: 2025/04/index.html
+  for (const m of archiveMonths()) {
+    const list = m.posts.slice(0, 25);
+    const i = posts.indexOf(list[list.length - 1]);
+    const older = posts[i + 1] ? `${SITE}/search?updated-max=${list[list.length - 1].date.iso8601}&max-results=10` : null;
+    const newer = posts.indexOf(list[0]) > 0 ? `${SITE}/search?updated-max=${list[0].date.iso8601}&max-results=10&reverse-paginate=true` : null;
+    out.push({ params: { path: `${m.y}/${m.m}/index` }, props: { D: makeD({ kind: 'archive', list, url: m.url, olderPageUrl: older, newerPageUrl: newer }) } });
+  }
+
+  // shells the Worker fills with cards: search results (/search?q=) and plain lists (/search?updated-max=, /2025/)
+  out.push({ params: { path: '_search' }, props: { D: makeD({ kind: 'search', list: posts.slice(0, 1), query: '__KQ__', url: `${SITE}/search` }) } });
+  out.push({ params: { path: '_list' }, props: { D: makeD({ kind: 'search', list: posts.slice(0, 1), url: `${SITE}/search` }) } });
+  // 404
+  out.push({ params: { path: '404' }, props: { D: makeD({ kind: 'error', error: true, list: [], url: `${SITE}/` }) } });
+  return out;
+}
+const { D } = Astro.props;
+---
+<Theme D={D} />

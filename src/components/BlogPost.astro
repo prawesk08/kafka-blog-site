@@ -1,0 +1,77 @@
+---
+// The theme's `kafkaPost` includable (post page and static page), rebuilt from post data.
+import frag from '../data/theme-fragments.json';
+import cfg from '../data/site-config.json';
+import { neighbours } from '../lib/nav.js';
+const { post, D } = Astro.props;
+const v = D.view;
+const isNe = post.labelNames.includes('lang-ne');
+const lang = isNe ? { lang: 'ne' } : {};
+const skip = ['pinned', 'top', 'lang-ne', 'lang-en'];
+const sections = post.labelNames.filter((l) => !skip.includes(l)).join(', ');
+const ld = {
+  '@context': 'https://schema.org', '@type': 'BlogPosting',
+  headline: post.title, description: post.snippets.long,
+  url: post.href, mainEntityOfPage: { '@type': 'WebPage', '@id': post.href },
+  datePublished: post.date.iso8601, dateModified: post.lastUpdated.iso8601,
+  image: post.featuredImage || 'https://lh3.googleusercontent.com/d/1MI5eUhUk92qsXnV71Qraa94USqGbCIu0=w1200',
+  inLanguage: isNe ? 'ne' : 'en', articleSection: sections, keywords: sections,
+  isPartOf: { '@type': 'Blog', '@id': D.blog.homepageUrl + '#blog', name: 'Kafkaintherun' },
+  author: { '@type': 'Person', '@id': D.blog.homepageUrl + '#author', name: 'Basava', alternateName: 'बासभ', url: D.blog.homepageUrl },
+  publisher: { '@type': 'Organization', name: 'Kafkaintherun', logo: { '@type': 'ImageObject', url: 'https://lh3.googleusercontent.com/d/1GaxqgL5vx421lm9RcZkEAiNA_fY50s34=w400' } },
+};
+const { older, newer } = v.isPost ? neighbours(post) : {};
+const comments = post.comments || [];
+const fmt = (iso) => new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(iso)).replace(', ', ', ').replace(' at ', ' at ');
+---
+{v.isPage ? (
+  <article class="static-page"><h1>{post.title}</h1><div class="prose" set:html={post.body}></div></article>
+) : (
+  <Fragment>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(ld)}></script>
+    <div class="post-labels" hidden="hidden">{post.labels.map((l) => <a data-label={l.name} href={l.url}>{l.name}</a>)}</div>
+    <header class="post-head" data-pid={post.id} {...lang}>
+      <img alt="" class="title-doodle" />
+      <h1>{post.title}</h1>
+      <p class="post-sub"></p>
+      <div class="chips">{post.labels.map((l) => <a class="chip" data-label={l.name} href={l.url}>{l.name}</a>)}</div>
+      <div class="meta"><time data-date={post.date.iso8601}>{String(post.date)}</time><span class="read"></span><span class="by-name">Written by बासभ</span></div>
+      <Fragment set:html={frag.shareTop} />
+      <div class="sub-strip"><span>New pieces by email, Nepali and English.</span><a href="#subscribe">Subscribe</a></div>
+      <hr class="post-sep" />
+    </header>
+    <article class="prose" {...lang}><Fragment set:html={post.body} /><img alt="" class="end-doodle" /></article>
+    <script is:inline set:html={frag.afterArticleScript}></script>
+    <Fragment set:html={frag.shareEnd} />
+    <div class="sub-inline"><p><b>Get new pieces by email</b>Nepali and English, whenever there is something worth sending. No spam.</p><a href="#subscribe">Subscribe</a></div>
+    <div class="cover-slot"></div>
+    <nav aria-label="More posts" class="postnav">
+      <div class="postnav-row">
+        {older ? <a class="older" href={older.href}>&#8249; Previous</a> : <span class="off"></span>}
+        <a class="home" href={D.blog.homepageUrl}>Home</a>
+        {newer ? <a class="newer" href={newer.href}>Next &#8250;</a> : <span class="off"></span>}
+      </div>
+      <form action="/search" class="postnav-search" method="get" role="search">
+        <input aria-label="Search Kafkaintherun" name="q" placeholder="Search essays, poems, history, science..." type="search" />
+        <button type="submit">Search</button>
+      </form>
+    </nav>
+    {comments.length > 0 && (
+    <section class="comments-box" id="comments">
+      <h2>Comments</h2>
+      <section class="comments threaded" data-num-comments={comments.length}>
+        <div class="comments-content"><div id="comment-holder"><div class="comment-thread toplevel-thread"><ol id="top-ra">
+          {comments.map((c) => (
+            <li class="comment" id={'c' + c.id}>
+              <div class="comment-block">
+                <div class="comment-header"><cite class="user">{c.authorUrl ? <a href={c.authorUrl} rel="nofollow">{c.author}</a> : c.author}</cite><span class="datetime secondary-text"><a rel="nofollow" href={'#c' + c.id}>{fmt(c.published)}</a></span></div>
+                <p class="comment-content" set:html={c.body}></p>
+              </div>
+            </li>
+          ))}
+        </ol></div></div></div>
+      </section>
+    </section>
+    )}
+  </Fragment>
+)}

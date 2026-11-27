@@ -1,0 +1,12 @@
+/* Blocks the /admin/ editor can insert. Shared by the live site and the editor preview. */
+.kfig{margin:1.8em auto;text-align:center}
+.kfig img{max-width:100%;height:auto;border-radius:3px}
+.kfig-wide{max-width:none}.kfig-normal{max-width:640px}.kfig-small{max-width:380px}
+.kfig figcaption,.kcover-cap{font:400 .86rem/1.45 Inter,system-ui,sans-serif;color:#6b6258;margin-top:.55em;text-align:center}
+.kfig cite,.kcover-cap cite{font-style:normal;opacity:.75;margin-left:.4em}
+.kfig cite:before,.kcover-cap cite:before{content:"\00b7 ";}
+.kpull{margin:1.8em auto;max-width:34em;padding:.2em 0 .2em 1.1em;border-left:3px solid #c9a24a;font:italic 400 1.35em/1.45 Fraunces,Georgia,serif;color:#3a342c}
+.kpull cite{display:block;margin-top:.5em;font:600 .78rem/1.2 Inter,system-ui,sans-serif;font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:#8a7a5c}
+.khl{margin:1.6em 0;padding:14px 20px;border-radius:4px;background:#f6edd6;border-left:4px solid #c9a24a;font-size:.96em}
+.khl-rose{background:#f6e3e1;border-left-color:#c97a7a}.khl-sage{background:#e6eddc;border-left-color:#8fa573}
+.kdrop:first-letter{float:left;font:700 3.6em/.82 Fraunces,Georgia,serif;padding:.06em .1em 0 0;color:#2a251f}

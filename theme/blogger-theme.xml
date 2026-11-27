@@ -269,7 +269,7 @@ window.kafkaLd=function(el){try{if(!el||el.type!=="text/x-kafka-ld")return;var t
 <link href='https://fonts.googleapis.com' rel='preconnect'/>
 <link crossorigin='anonymous' href='https://fonts.gstatic.com' rel='preconnect'/>
 <link as='style' href='https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&amp;family=Lora:ital,wght@0,400;0,500;0,600;1,400&amp;family=Martel:wght@300;400;600;700&amp;family=Spectral:ital,wght@0,400;0,500;0,600;1,400&amp;family=Inter:wght@400;500;600&amp;display=optional' rel='preload'/><link href='https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&amp;family=Lora:ital,wght@0,400;0,500;0,600;1,400&amp;family=Martel:wght@300;400;600;700&amp;family=Spectral:ital,wght@0,400;0,500;0,600;1,400&amp;family=Inter:wght@400;500;600&amp;display=optional' media='print' onload='this.media=&quot;all&quot;' rel='stylesheet'/><noscript><link href='https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&amp;family=Lora:ital,wght@0,400;0,500;0,600;1,400&amp;family=Martel:wght@300;400;600;700&amp;family=Spectral:ital,wght@0,400;0,500;0,600;1,400&amp;family=Inter:wght@400;500;600&amp;display=optional' rel='stylesheet'/></noscript>
-<link href='https://assets.kafka.blog/kafka-skin-v187.css?v=187' rel='stylesheet'/>
+<link href='https://assets.kafka.blog/kafka-skin-v187.css?v=188' rel='stylesheet'/>
 <b:skin version='1.0.0'><![CDATA[/* Kafkaintherun v187 - theme CSS is served from https://assets.kafka.blog/kafka-skin-v187.css */]]></b:skin>
 <script>//<![CDATA[
 /* v154 image fit: request listing images at shown size */
@@ -2152,7 +2152,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </b:if>
 <script defer='defer' src='https://assets.kafka.blog/kafka-ui.js?v=187'/>
 <link href='https://assets.kafka.blog/kafka-collections.css?v=9' rel='stylesheet'/>
-<script defer='defer' src='https://assets.kafka.blog/kafka-collections.js?v=9'/>
+<script defer='defer' src='https://assets.kafka.blog/kafka-collections.js?v=10'/>
 <script defer='defer' src='https://assets.kafka.blog/kafka-audio-schema.js?v=4'/>
 <script>//<![CDATA[
 /* v169 list artwork: covers and poster tiles on Books, Movies, Songs, Series */

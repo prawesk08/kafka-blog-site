@@ -2148,7 +2148,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <!-- v164: externalized theme JS hosted on Cloudflare Pages (assets.kafka.blog) -->
 <script defer='defer' src='https://assets.kafka.blog/kafka-core.js?v=236'/>
 <b:if cond='data:view.isPost'>
-<script defer='defer' src='https://assets.kafka.blog/kafka-post.js?v=197'/>
+<script defer='defer' src='https://assets.kafka.blog/kafka-post.js?v=198'/>
 </b:if>
 <script defer='defer' src='https://assets.kafka.blog/kafka-ui.js?v=187'/>
 <link href='https://assets.kafka.blog/kafka-collections.css?v=9' rel='stylesheet'/>

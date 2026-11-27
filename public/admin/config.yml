@@ -22,13 +22,27 @@ collections:
     slug: "{{slug}}"
     summary: "{{title}} ({{year}}-{{month}})"
     sortable_fields: [date, title]
+    editor:
+      preview: true
     fields:
-      - { name: title, label: Title, widget: string }
+      - { name: title, label: Title, widget: string, hint: "The headline shown on the post." }
+      - { name: subtitle, label: Subtitle, widget: string, required: false, hint: "A line under the title." }
+      - { name: category, label: Category, widget: select, options: [Articles, Poetry, Nepali Poetry, English Poetry, Nepali literature, Ramblings, Musings, History, Science, Letters, Monologues, Stories, Published Articles], default: Articles, hint: "Where the post is filed on the site." }
+      - { name: language, label: Language, widget: select, options: [{ label: English, value: lang-en }, { label: Nepali, value: lang-ne }], default: lang-en }
+      - { name: tags, label: Tags, widget: list, required: false, hint: "Extra labels such as Kathmandu, Music. Press Enter after each." }
       - { name: date, label: Publish date, widget: datetime, hint: "A date in the future keeps the post hidden until then (after the next rebuild)." }
-      - { name: labels, label: Labels, widget: list, default: [lang-en], hint: "Comma separated, for example: Poetry, English, English Poetry, lang-en. Use lang-ne for Nepali posts. pinned and top work as before." }
-      - { name: description, label: Search description, widget: text, required: false, hint: "One or two sentences for Google and link previews." }
+      - { name: cover, label: Featured image, widget: image, required: false, hint: "Shown at the top and used for link previews." }
+      - { name: cover_alt, label: Image description (alt text), widget: string, required: false, hint: "Describe the picture for screen readers and Google." }
+      - { name: cover_caption, label: Image caption, widget: string, required: false }
+      - { name: cover_credit, label: Image credit, widget: string, required: false }
+      - { name: synopsis, label: Synopsis, widget: text, required: false, hint: "Two sentences shown on cards and lists." }
+      - { name: social, label: Social media share message, widget: text, required: false, hint: "The text people see when the link is shared on Facebook, WhatsApp, X. Falls back to the meta description." }
+      - { name: seo_title, label: SEO title, widget: string, required: false, hint: "Title for Google and browser tabs, about 60 characters. Leave empty to use the title plus | Kafkaintherun." }
+      - { name: description, label: Meta description, widget: text, required: false, hint: "Up to about 155 characters for Google. Leave empty to use the synopsis." }
+      - { name: keywords, label: SEO tags (keywords), widget: list, required: false, hint: "Search keywords, press Enter after each." }
+      - { name: dropcap, label: Large first letter (drop cap), widget: boolean, default: false, required: false }
       - { name: draft, label: Draft (not published), widget: boolean, default: false, required: false }
-      - { name: body, label: Post, widget: markdown }
+      - { name: body, label: Post, widget: markdown, hint: "Use + to add an image with caption, a pull quote or a highlight box." }
 
   - name: posts_html
     label: Posts from Blogger
@@ -47,7 +61,10 @@ collections:
       - { name: date, label: Publish date, widget: datetime }
       - { name: updated, label: Last updated, widget: datetime, required: false }
       - { name: labels, label: Labels, widget: list }
-      - { name: description, label: Search description, widget: text, required: false }
+      - { name: seo_title, label: SEO title, widget: string, required: false }
+      - { name: social, label: Social media share message, widget: text, required: false }
+      - { name: keywords, label: SEO tags (keywords), widget: list, required: false }
+      - { name: description, label: Meta description, widget: text, required: false }
       - { name: blogger_id, label: Blogger id (do not change), widget: hidden }
       - { name: draft, label: Draft (not published), widget: boolean, default: false, required: false }
       - { name: body, label: Post HTML, widget: code, default_language: html, output_code_only: true, allow_language_selection: false }
@@ -66,7 +83,10 @@ collections:
       - { name: date, label: Date, widget: datetime }
       - { name: updated, label: Last updated, widget: datetime, required: false }
       - { name: labels, label: Labels, widget: list, required: false, default: [] }
-      - { name: description, label: Search description, widget: text, required: false }
+      - { name: seo_title, label: SEO title, widget: string, required: false }
+      - { name: social, label: Social media share message, widget: text, required: false }
+      - { name: keywords, label: SEO tags (keywords), widget: list, required: false }
+      - { name: description, label: Meta description, widget: text, required: false }
       - { name: blogger_id, label: Blogger id (do not change), widget: hidden, required: false }
       - { name: draft, label: Draft (not published), widget: boolean, default: false, required: false }
       - { name: body, label: Page HTML, widget: code, default_language: html, output_code_only: true, allow_language_selection: false }

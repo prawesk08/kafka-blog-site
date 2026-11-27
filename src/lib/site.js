@@ -65,6 +65,7 @@ const mk = (p) => {
     snippets: { short: shortSnip, long: snippetLong(p.body) },
     featuredImage: firstImage(p.body),
     description: p.description || '',
+    seoTitle: p.seoTitle || '', keywords: p.keywords || '', social: p.social || '',
     comments: p.comments || [],
     lang: (p.labels || []).includes('lang-ne') ? 'ne' : 'en',
   };
@@ -115,6 +116,7 @@ export function makeD({ kind, item = null, list = [], label = null, query = null
     title: item ? item.title : BLOG.title,
     description: item ? (item.description || item.snippets.short) : BLOG.metaDescription,
     featuredImage: item ? item.featuredImage : '',
+    seoTitle: item ? item.seoTitle : '', keywords: item ? item.keywords : '', social: item ? item.social : '',
     url: Object.assign(new String(canonical), { canonical }),
     search: { label, query },
   };

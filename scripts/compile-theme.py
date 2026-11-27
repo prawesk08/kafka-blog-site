@@ -188,6 +188,17 @@ def main(src, dst):
           'const { D } = Astro.props;\n'
           'const J = (s) => JSON.stringify(String(s ?? \'\')).slice(1, -1);\n---\n')
     page = fm + f'<!DOCTYPE html>\n<html lang="{lang}">' + out[0] + out[1] + '</html>\n'
+    # Fields from the /admin/ editor: SEO title, social share text, SEO keywords (see src/lib/site.js)
+    def sub(a, b, n=1):
+        nonlocal page
+        assert page.count(a) >= 1, 'theme changed, cannot patch: ' + a
+        page = page.replace(a, b)
+    sub('("" + String(D.view.title) + " | Kafkaintherun")', '(D.view.seoTitle ? String(D.view.seoTitle) : "" + String(D.view.title) + " | Kafkaintherun")')
+    sub('<meta content={D.view.title} property="og:title">', '<meta content={D.view.seoTitle || D.view.title} property="og:title">')
+    sub('<meta content={D.view.title} name="twitter:title">', '<meta content={D.view.seoTitle || D.view.title} name="twitter:title">{D.view.keywords ? (<meta name="keywords" content={D.view.keywords}>) : null}')
+    sub('<meta content={D.view.description} property="og:description">', '<meta content={D.view.social || D.view.description} property="og:description">')
+    # Favicon: the priest king (public/favicon.ico, favicon-32.png, apple-touch-icon.png)
+    page = re.sub(r'<link href="https://lh3\.googleusercontent\.com/d/13BZNy4hE52ijgDktiC3RfZ3fC62pxgye=w64" rel="icon">', '<link href="/favicon.ico" rel="icon" sizes="any"><link href="/favicon-32.png" rel="icon" type="image/png" sizes="32x32"><link href="/apple-touch-icon.png" rel="apple-touch-icon">', page)
     open(dst, 'w').write(page)
     print('wrote', dst, len(page))
 

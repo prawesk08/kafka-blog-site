@@ -1,0 +1,8 @@
+/* A calmer, writing-first look for the editor (in the spirit of Substack / WordPress). */
+body{font-family:Inter,system-ui,-apple-system,sans-serif!important;background:#f7f4ec!important}
+[class*="ControlContainer"] input[type=text],[class*="ControlContainer"] textarea{font-family:inherit}
+input[id^="title-field"]{font:700 1.7rem/1.25 Fraunces,Georgia,serif!important;border:none!important;box-shadow:none!important;background:transparent!important;padding:10px 4px!important}
+[class*="EditorControlBar"]{box-shadow:none!important;border-bottom:1px solid #e6dfcf!important}
+[class*="ControlContainer"] [class*="Label"]{letter-spacing:.04em;text-transform:uppercase;font-size:11px!important}
+[data-slate-editor],[class*="EditorContainer"] [contenteditable]{font:400 1.12rem/1.75 Lora,Georgia,serif!important;min-height:420px}
+[class*="PreviewPaneContainer"]{background:#fdfaf3}

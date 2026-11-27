@@ -1,0 +1,10 @@
+User-agent: Mediapartners-Google
+Disallow: 
+
+User-agent: *
+Disallow: /search
+Allow: /
+
+Sitemap: https://www.kafka.blog/sitemap.xml
+Sitemap: https://www.kafka.blog/sitemap-pages.xml
+Sitemap: https://assets.kafka.blog/video-sitemap.xml

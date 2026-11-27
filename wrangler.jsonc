@@ -10,5 +10,7 @@
     "html_handling": "none",
     "not_found_handling": "none"
   },
+  // public id of the GitHub OAuth App used by the /admin editor sign-in; GITHUB_CLIENT_SECRET is set as a Worker secret in the dashboard
+  "vars": { "GITHUB_CLIENT_ID": "Ov23li2m1RguvnoE7mVx" },
   "observability": { "enabled": true }
 }

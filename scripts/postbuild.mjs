@@ -98,7 +98,9 @@ w('feeds/_data/atom.xml', atom(posts.slice(0, 25), `${SITE}/feeds/posts/default`
 w('feeds/_data/rss.xml', rss(posts.slice(0, 25)));
 
 // ---------- sitemaps (same shape as Blogger's) ----------
-w('sitemap.xml', `<?xml version='1.0' encoding='UTF-8'?><urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>${posts.map((p) => `<url><loc>${p.href}</loc><lastmod>${new Date(p.updated).toISOString()}</lastmod></url>`).join('')}</urlset>`);
+// Real change dates: posts whose `updated` is only the Nov 20-22 2026 migration touch-up keep their publish date.
+const lastmod = (p) => { const u = new Date(p.updated), d = new Date(p.published || p.updated); const mig = u >= new Date('2026-11-20T00:00:00Z') && u < new Date('2026-11-23T00:00:00Z') && d < new Date('2026-11-20T00:00:00Z'); return (mig ? d : u).toISOString(); };
+w('sitemap.xml', `<?xml version='1.0' encoding='UTF-8'?><urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>${posts.map((p) => `<url><loc>${p.href}</loc><lastmod>${lastmod(p)}</lastmod></url>`).join('')}</urlset>`);
 w('sitemap-pages.xml', `<?xml version='1.0' encoding='UTF-8'?><urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'><url><loc>${SITE}/</loc></url>${pages.map((p) => `<url><loc>${p.href}</loc><lastmod>${new Date(p.updated).toISOString()}</lastmod></url>`).join('')}</urlset>`);
 w('robots.txt', `User-agent: Mediapartners-Google\nDisallow: \n\nUser-agent: *\nDisallow: /search\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\nSitemap: ${SITE}/sitemap-pages.xml\nSitemap: https://assets.kafka.blog/video-sitemap.xml\n`);
 w('ads.txt', 'google.com, pub-9227280103943233, DIRECT, f08c47fec0942fa0\n');

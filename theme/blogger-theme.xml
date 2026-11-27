@@ -61,7 +61,6 @@ gtag("config","G-SFDM68X16K");
 html.k-redirecting::after{content:&#39;Taking you to the piece\2026&#39;;visibility:visible;position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font:500 17px Georgia,serif;color:#857D72}</style>
 
 <meta content='width=device-width, initial-scale=1' name='viewport'/>
-<meta content='blogger' name='generator'/>
 <link expr:href='data:view.url.canonical' rel='canonical'/>
 <link expr:title='data:blog.title + &quot; - Atom&quot;' href='/feeds/posts/default' rel='alternate' type='application/atom+xml'/>
 <link expr:title='data:blog.title + &quot; - RSS&quot;' href='/feeds/posts/default?alt=rss' rel='alternate' type='application/rss+xml'/>
@@ -657,7 +656,7 @@ document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&
 </div>
 <b:elseif cond='data:view.isHomepage'/>
 <div class='home-main'>
-  <div id='kafka-home'><p class='k-loading'>Loading posts&#8230;</p><noscript><nav aria-label='Sections'><ul><li><a href='/p/history.html'>History</a></li><li><a href='/p/science.html'>Science</a></li><li><a href='/p/poetry.html'>Poetry</a></li><li><a href='/p/letters.html'>Letters</a></li><li><a href='/p/stories.html'>Stories</a></li><li><a href='/p/series.html'>Series</a></li><li><a href='/search/label/Nepali'>Nepali</a></li><li><a href='/search/label/English'>English</a></li></ul></nav></noscript></div>
+  <div id='kafka-home'><p class='k-loading'>Loading posts&#8230;</p><noscript><nav aria-label='Sections'><ul><li><a href='/p/history.html'>History</a></li><li><a href='/p/science.html'>Science</a></li><li><a href='/p/nepali-kavita.html'>Poetry</a></li><li><a href='/p/letters.html'>Letters</a></li><li><a href='/p/stories.html'>Stories</a></li><li><a href='/p/series.html'>Series</a></li><li><a href='/search/label/Nepali'>Nepali</a></li><li><a href='/search/label/English'>English</a></li></ul></nav></noscript></div>
   <div class='sec-h' id='photos'><img alt='' data-doodle='photographs'/><h2><span>Photographs</span></h2><a class='more' href='/p/photos.html'>All photographs &#8250;</a> <a class='more' href='https://www.instagram.com/naharchowck/'>Instagram &#8250;</a></div>
   <ul class='gallery' id='kafka-gallery'/>
   <dialog aria-label='Photo viewer' class='viewer' id='kafka-viewer'><button aria-label='Close' class='v-close' type='button'>&#10005;</button><button aria-label='Previous' class='v-prev' type='button'>&#8249;</button><figure><img alt=''/><figcaption><span class='v-n'/></figcaption></figure><button aria-label='Next' class='v-next' type='button'>&#8250;</button></dialog>

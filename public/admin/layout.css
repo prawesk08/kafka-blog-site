@@ -1,0 +1,10 @@
+/* Field order in config.yml: 1 title, 2 subtitle, 3 date, 4 draft, 5-8 settings groups, 9 body */
+.kform{display:flow-root;max-width:1240px!important;width:100%;margin:0 auto!important;padding:18px 26px 60px!important}
+.kform>:nth-child(n+5):nth-child(-n+8)>label{display:none}
+.kform>:nth-child(3),.kform>:nth-child(4),.kform>:nth-child(5),.kform>:nth-child(6),.kform>:nth-child(7),.kform>:nth-child(8){float:right;clear:right;width:330px;margin:0 0 12px 24px!important}
+.kform>:nth-child(9){margin-right:358px!important}
+.kform>:nth-child(n+5):nth-child(-n+8){background:#fff;border:1px solid #e6dfcf;border-radius:6px;padding:4px 12px}
+@media (max-width:1100px){
+  .kform>:nth-child(n+3):nth-child(-n+8){float:none;width:auto;margin:0 0 12px 0!important}
+  .kform>:nth-child(9){margin-right:0!important}
+}

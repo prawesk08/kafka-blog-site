@@ -56,6 +56,7 @@ const fmt = (iso) => new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_Y
         <button type="submit">Search</button>
       </form>
     </nav>
+    {comments.length > 0 && (
     <section class="comments-box" id="comments">
       <h2>Comments</h2>
       <section class="comments threaded" data-num-comments={comments.length}>
@@ -69,15 +70,8 @@ const fmt = (iso) => new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_Y
             </li>
           ))}
         </ol></div></div></div>
-        <div class="comment-form" id="kcomment-form">
-          {cfg.cusdisAppId && (
-            <Fragment>
-              <div id="cusdis_thread" data-host="https://cusdis.com" data-app-id={cfg.cusdisAppId} data-page-id={post.id} data-page-url={post.href} data-page-title={post.title} data-theme="auto"></div>
-              <script is:inline async defer src="https://cusdis.com/js/cusdis.es.js"></script>
-            </Fragment>
-          )}
-        </div>
       </section>
     </section>
+    )}
   </Fragment>
 )}

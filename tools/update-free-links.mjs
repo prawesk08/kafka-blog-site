@@ -55,6 +55,7 @@ export async function findRead(f, q) {
   const r = await get(f, url, true); if (!r.ok) return null;
   const docs = (r.data.docs || []).filter(d => d.ebook_access === 'public' && d.ia && d.ia.length && matches(d.title, q.title) && (d.author_name || []).some(a => norm(a).includes(norm(q.last))));
   for (const d of docs) for (const id of d.ia.slice(0, 12)) {
+    if (/0000|^isbn_|^bwb_/.test(id)) continue;      // library-lending and bookseller scans are borrow-only, whatever their metadata says
     // a "public" work can list borrow-only library scans too; take only an item that opens for anyone
     let md; try { const m = await f(`https://archive.org/metadata/${id}`, { headers: UA, signal: AbortSignal.timeout(8000) }); if (!m.ok) continue; md = await m.json(); } catch { continue; }
     const meta = md.metadata || {}; const coll = [].concat(meta.collection || []);

@@ -2147,11 +2147,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <!-- v164: externalized theme JS hosted on Cloudflare Pages (assets.kafka.blog) -->
 <script defer='defer' src='https://assets.kafka.blog/kafka-core.js?v=240'/>
 <b:if cond='data:view.isPost'>
-<script defer='defer' src='https://assets.kafka.blog/kafka-post.js?v=197'/>
+<script defer='defer' src='https://assets.kafka.blog/kafka-post.js?v=198'/>
 </b:if>
 <script defer='defer' src='https://assets.kafka.blog/kafka-ui.js?v=188'/>
-<link href='https://assets.kafka.blog/kafka-collections.css?v=70' rel='stylesheet'/>
-<script defer='defer' src='https://assets.kafka.blog/kafka-collections.js?v=70'/>
+<link href='https://assets.kafka.blog/kafka-collections.css?v=71' rel='stylesheet'/>
+<script defer='defer' src='https://assets.kafka.blog/kafka-collections.js?v=71'/>
 <script defer='defer' src='https://assets.kafka.blog/kafka-audio-schema.js?v=6'/>
 <script>//<![CDATA[
 /* v169 list artwork: covers and poster tiles on Books, Movies, Songs, Series */

@@ -35,7 +35,8 @@ export function query(item) {
   const first = item.by.split(/\s·\s|,\s*\d/)[0].replace(/\(.*?\)/g, '').trim();
   const last = first.split(/\s+/).pop().replace(/[^\p{L}-]/gu, '');
   if (!title || !last) return null;
-  return { title, last };
+  const ys = (item.by.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g) || []).map(Number);
+  return { title, last, year: ys.length ? Math.min(...ys) : null };
 }
 
 async function get(f, url, json) {
@@ -49,12 +50,20 @@ const matches = (got, want) => { const a = norm(got), b = norm(want); return a =
 
 // Read -> Open Library, public-domain scans only (ebook_access=public), linked on archive.org
 export async function findRead(f, q) {
+  if (!q.year || q.year > 1930) return null;                 // US public domain: published before 1931 (as of 2026)
   const url = `https://openlibrary.org/search.json?has_fulltext=true&limit=8&fields=title,author_name,ebook_access,ia&title=${encodeURIComponent(q.title)}&author=${encodeURIComponent(q.last)}`;
   const r = await get(f, url, true); if (!r.ok) return null;
-  const hit = (r.data.docs || []).find(d => d.ebook_access === 'public' && d.ia && d.ia.length && matches(d.title, q.title) && (d.author_name || []).some(a => norm(a).includes(norm(q.last))));
-  if (!hit) return null;
-  const link = `https://archive.org/details/${hit.ia[0]}`;
-  return (await alive(f, link)) ? link : null;
+  const docs = (r.data.docs || []).filter(d => d.ebook_access === 'public' && d.ia && d.ia.length && matches(d.title, q.title) && (d.author_name || []).some(a => norm(a).includes(norm(q.last))));
+  for (const d of docs) for (const id of d.ia.slice(0, 12)) {
+    // a "public" work can list borrow-only library scans too; take only an item that opens for anyone
+    let md; try { const m = await f(`https://archive.org/metadata/${id}`, { headers: UA, signal: AbortSignal.timeout(8000) }); if (!m.ok) continue; md = await m.json(); } catch { continue; }
+    const meta = md.metadata || {}; const coll = [].concat(meta.collection || []);
+    if (meta['access-restricted-item'] === 'true' || coll.some(c => /inlibrary|printdisabled|lendinglibrary/.test(c))) continue;
+    if (!md.files || !md.files.some(x => /\.(epub|pdf)$/i.test(x.name))) continue;
+    const link = `https://archive.org/details/${id}`;
+    if (await alive(f, link)) return link;
+  }
+  return null;
 }
 // Listen -> LibriVox recordings, which the Internet Archive mirrors in the librivoxaudio collection
 export async function findListen(f, q) {

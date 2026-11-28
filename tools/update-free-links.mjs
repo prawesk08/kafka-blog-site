@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Finds legitimately free copies of the books on content/pages/books.html and keeps
 // <p class="kafka-item-free" data-auto> in sync:
-//   Read   -> Project Gutenberg (Gutendex, copyright=false only)
-//   Listen -> LibriVox
+//   Read   -> Open Library / Internet Archive (public-domain scans only)
+//   Listen -> LibriVox recordings on the Internet Archive
 // A link is added only when the API lists the book AND the URL answers 200.
 // Links you wrote by hand (kafka-item-free without data-auto) are never touched.
 // Auto links that stop working are removed on the next run. If a lookup fails
@@ -47,21 +47,25 @@ async function get(f, url, json) {
 const alive = async (f, url) => { try { const r = await f(url, { method: 'GET', headers: UA, redirect: 'follow', signal: AbortSignal.timeout(8000) }); return r.status === 200; } catch { return false; } };
 const matches = (got, want) => { const a = norm(got), b = norm(want); return a === b || a.startsWith(b + ' ') || b.startsWith(a + ' '); };
 
+// Read -> Open Library, public-domain scans only (ebook_access=public), linked on archive.org
 export async function findRead(f, q) {
-  const url = `https://gutendex.com/books/?copyright=false&languages=en&search=${encodeURIComponent(q.title + ' ' + q.last)}`;
+  const url = `https://openlibrary.org/search.json?has_fulltext=true&limit=8&fields=title,author_name,ebook_access,ia&title=${encodeURIComponent(q.title)}&author=${encodeURIComponent(q.last)}`;
   const r = await get(f, url, true); if (!r.ok) return null;
-  const hit = r.data.results.find(b => matches(b.title.split(/[:;]/)[0], q.title) && b.authors.some(a => norm(a.name).includes(norm(q.last))));
+  const hit = (r.data.docs || []).find(d => d.ebook_access === 'public' && d.ia && d.ia.length && matches(d.title, q.title) && (d.author_name || []).some(a => norm(a).includes(norm(q.last))));
   if (!hit) return null;
-  const link = `https://www.gutenberg.org/ebooks/${hit.id}`;
+  const link = `https://archive.org/details/${hit.ia[0]}`;
   return (await alive(f, link)) ? link : null;
 }
+// Listen -> LibriVox recordings, which the Internet Archive mirrors in the librivoxaudio collection
 export async function findListen(f, q) {
-  const url = `https://librivox.org/api/feed/audiobooks/?format=json&limit=10&title=%5E${encodeURIComponent(q.title)}&author=${encodeURIComponent(q.last)}`;
-  const r = await get(f, url, true); if (!r.ok || !r.data.books) return null;
-  const hit = r.data.books.find(b => b.url_librivox && matches(b.title.replace(/\s*\(.*?\)\s*/g, ' '), q.title));
+  const esc = s => s.replace(/["\\]/g, ' ');
+  const query = `collection:librivoxaudio AND title:("${esc(q.title)}") AND creator:(${esc(q.last)})`;
+  const url = `https://archive.org/advancedsearch.php?output=json&rows=8&fl[]=identifier&fl[]=title&q=${encodeURIComponent(query)}`;
+  const r = await get(f, url, true); if (!r.ok) return null;
+  const hit = ((r.data.response || {}).docs || []).find(d => matches(String(d.title).replace(/\s*\(.*?\)\s*/g, ' '), q.title));
   if (!hit) return null;
-  const link = hit.url_librivox.replace(/^http:/, 'https:');
-  return /^https:\/\/librivox\.org\//.test(link) && (await alive(f, link)) ? link : null;
+  const link = `https://archive.org/details/${hit.identifier}`;
+  return (await alive(f, link)) ? link : null;
 }
 
 const AUTO = /\n?[ \t]*<p class="kafka-item-free" data-auto>[\s\S]*?<\/p>/;

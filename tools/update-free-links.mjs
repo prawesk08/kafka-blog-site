@@ -74,6 +74,7 @@ export async function run(html, f = fetch, log = console.log) {
     let read, listen;
     try { read = await findRead(f, q); listen = await findListen(f, q); }
     catch (e) { log(`  ! ${it.title}: ${e.message} (leaving as is)`); kept++; continue; }
+    if (!had && !read && !listen) continue;
     let block = it.block.replace(AUTO, '').replace(/\s+$/, '');
     if (read || listen) {
       const a = [];

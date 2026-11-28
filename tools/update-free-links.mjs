@@ -39,12 +39,12 @@ export function query(item) {
 }
 
 async function get(f, url, json) {
-  const r = await f(url, { headers: UA, redirect: 'follow', signal: AbortSignal.timeout(20000) });
+  const r = await f(url, { headers: UA, redirect: 'follow', signal: AbortSignal.timeout(8000) });
   if (r.status === 404) return { ok: false, status: 404 };
   if (!r.ok) throw new Error(url + ' -> ' + r.status);
   return { ok: true, status: r.status, data: json ? await r.json() : undefined };
 }
-const alive = async (f, url) => { try { const r = await f(url, { method: 'GET', headers: UA, redirect: 'follow', signal: AbortSignal.timeout(20000) }); return r.status === 200; } catch { return false; } };
+const alive = async (f, url) => { try { const r = await f(url, { method: 'GET', headers: UA, redirect: 'follow', signal: AbortSignal.timeout(8000) }); return r.status === 200; } catch { return false; } };
 const matches = (got, want) => { const a = norm(got), b = norm(want); return a === b || a.startsWith(b + ' ') || b.startsWith(a + ' '); };
 
 export async function findRead(f, q) {
@@ -67,13 +67,16 @@ export async function findListen(f, q) {
 const AUTO = /\n?[ \t]*<p class="kafka-item-free" data-auto>[\s\S]*?<\/p>/;
 export async function run(html, f = fetch, log = console.log) {
   const items = parseItems(html); let out = html, shift = 0, added = 0, removed = 0, kept = 0;
-  for (const it of items) {
-    if (/class="kafka-item-free"(?! data-auto)/.test(it.block)) continue;    // hand-written links win
-    const q = query(it); if (!q) continue;
+  const todo = items.filter(it => !/class="kafka-item-free"(?! data-auto)/.test(it.block) && query(it));
+  log(`checking ${todo.length} books`);
+  const found = new Map(); let next = 0;
+  await Promise.all(Array.from({ length: 4 }, async () => { while (next < todo.length) { const it = todo[next++]; const q = query(it); try { found.set(it, { read: await findRead(f, q), listen: await findListen(f, q) }); } catch (e) { found.set(it, { err: e.message }); } } }));
+  for (const it of todo) {
+    const q = query(it);
     const had = AUTO.exec(it.block);
     let read, listen;
-    try { read = await findRead(f, q); listen = await findListen(f, q); }
-    catch (e) { log(`  ! ${it.title}: ${e.message} (leaving as is)`); kept++; continue; }
+    const r = found.get(it); if (r.err) { log(`  ! ${it.title}: ${r.err} (leaving as is)`); kept++; continue; }
+    read = r.read; listen = r.listen;
     if (!had && !read && !listen) continue;
     let block = it.block.replace(AUTO, '').replace(/\s+$/, '');
     if (read || listen) {

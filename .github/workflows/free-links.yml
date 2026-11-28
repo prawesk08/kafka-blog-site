@@ -20,18 +20,10 @@ jobs:
           node-version: 22
       - name: Look for free copies
         run: node tools/update-free-links.mjs content/pages/books.html
-      - name: Open and merge a PR if anything changed
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Commit straight to the default branch if anything changed
         run: |
           if git diff --quiet; then echo "No changes."; exit 0; fi
           git config user.name  "kafka-blog-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B auto/free-links
           git commit -am "Books: refresh free Read/Listen links"
-          git push -f origin auto/free-links
-          url=$(gh pr create --base "${{ github.event.repository.default_branch }}" --head auto/free-links \
-            --title "Books: refresh free Read/Listen links" \
-            --body "Automatic weekly check of Project Gutenberg and LibriVox. Only links that answered 200 are added; dead ones are removed. Hand-written links are never touched." 2>/dev/null \
-            || gh pr view auto/free-links --json url -q .url)
-          gh pr merge "$url" --merge
+          git push origin HEAD:${{ github.event.repository.default_branch }}

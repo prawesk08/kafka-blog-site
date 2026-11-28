@@ -151,6 +151,13 @@ const MAP = {
   '/author/kafkaintherun': '/',
   '/author/kafkaintherun/page/3': '/',
   '/home': '/',
+  // old WordPress feed and sitemap addresses
+  '/feed': '/feeds/posts/default?alt=rss',
+  '/rss.xml': '/feeds/posts/default?alt=rss',
+  '/atom.xml': '/feeds/posts/default',
+  '/comments/feed': '/feeds/posts/default?alt=rss',
+  '/wp-sitemap.xml': '/sitemap.xml',
+  '/sitemap_index.xml': '/sitemap.xml',
   '/page/3': '/',
 };
 for (const t of TO_KAVITA) MAP[t] = '/p/nepali-kavita.html';

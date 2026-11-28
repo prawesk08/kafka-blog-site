@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Rewrite description / social / keywords front matter of every item page (album, song, book, movie, show)
 from the facts already on the page. Distinct, specific, <=158 chars. Idempotent. Usage: seo_items.py [--dry]"""
-import re,glob,json,html,sys,os
+import re,glob,json,html,sys,os,difflib
 P=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','content','pages')
 dry='--dry' in sys.argv
 T=lambda s:html.unescape(re.sub(r'<[^>]+>','',s)).strip()
@@ -13,6 +13,8 @@ def one(rx,b,d=''):
     m=re.search(rx,b,re.S); return T(m.group(1)) if m else d
 def sent(s): s=s.strip(); return s if s[-1:] in '.!?”"' else s+'.'
 def fit(head,cands,lim=158):
+    hw=set(re.findall(r"\w+",head.lower()))
+    cands=[c for c in cands if not c or len([w for w in re.findall(r"\w+",c.lower()) if w in hw])/max(1,len(re.findall(r"\w+",c)))<0.5]
     best=head
     for c in cands:
         c=sent(c)
@@ -21,7 +23,7 @@ def fit(head,cands,lim=158):
         used=best[len(head)+1:]
         for c in cands:
             c=sent(c)
-            if c and c not in best and len(best)+1+len(c)<=lim and c[:30] not in best: best=best+' '+c
+            if c and c not in best and len(best)+1+len(c)<=lim and c[:30] not in best and difflib.SequenceMatcher(None,best[len(head):].lower(),c.lower()).ratio()<0.45 and not any(difflib.SequenceMatcher(None,x.lower(),c.lower()).ratio()>0.55 for x in re.split(r'(?<=[.!?]) ',best[len(head)+1:])): best=best+' '+c
     if best==head:
         for c in cands:
             c=sent(c)

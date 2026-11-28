@@ -496,8 +496,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script is:inline defer="defer" src="https://assets.kafka.blog/kafka-post.js?v=199"></script>
 </Fragment>) : null}
 <script is:inline defer="defer" src="https://assets.kafka.blog/kafka-ui.js?v=188"></script>
-<link href="https://assets.kafka.blog/kafka-collections.css?v=112" rel="stylesheet">
-<script is:inline defer="defer" src="https://assets.kafka.blog/kafka-collections.js?v=112"></script>
+<link href="https://assets.kafka.blog/kafka-collections.css?v=114" rel="stylesheet">
+<script is:inline defer="defer" src="https://assets.kafka.blog/kafka-collections.js?v=114"></script>
 <script is:inline defer="defer" src="https://assets.kafka.blog/kafka-audio-schema.js?v=6"></script>
 <script is:inline>//
 /* v169 list artwork: covers and poster tiles on Books, Movies, Songs, Series */
@@ -699,7 +699,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function show(l){
    var path=l==='ne'?'/-/Nepali':l==='en'?'/-/English':'';
    box.classList.add('is-loading');
-   (cache[l]?Promise.resolve(cache[l]):feed(path,1,5)).then(function(list){cache[l]=list;
+   (cache[l]?Promise.resolve(cache[l]):feed(path,1,matchMedia('(max-width:640px)').matches?12:5)).then(function(list){cache[l]=list;
     var more=l==='ne'?'/search/label/Nepali':l==='en'?'/search/label/English':'/search';
     box.innerHTML=list.map(function(p){var ne=isNe(p.title);return '<a class="k5" href="'+esc(p.url)+'"><span class="k5-img" style="background-image:url(\''+esc((p.img||'').replace(/([=/])w480-rw/,'$1w180-rw'))+'\')"></span><span class="k5-b"><span class="k5-t"'+(ne?' lang="ne"':'')+'>'+esc(p.title)+'</span><span class="k5-d">'+esc(p.date)+'</span></span></a>'}).join('')+'<a class="k5-more" href="'+more+'">'+(l==='ne'?'सबै नेपाली लेख ›':l==='en'?'All English posts ›':'Everything ›')+'</a>';
     box.classList.remove('is-loading');
